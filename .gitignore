@@ -48,3 +48,6 @@ next-env.d.ts
 
 # temp folders
 /temp-next
+
+# uploaded files
+/public/uploads
