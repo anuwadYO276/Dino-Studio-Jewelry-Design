@@ -2,8 +2,14 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
- 
+After `npm install`, generate the Prisma client (required before the app can talk to the database):
+
+```bash
+npx prisma generate
+```
+
+Then run the development server:
+
 ```bash
 npm run dev
 # or
