@@ -1,15 +1,13 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, requireRole } from "@/lib/auth-guard";
+import { requireRole } from "@/lib/auth-guard";
 import { createProductSchema, productFilterSchema } from "@/lib/validators";
 import { successResponse, errorResponse } from "@/lib/api-response";
 import { Prisma } from "@prisma/client";
 
-// GET /api/products - List products with filters
+// GET /api/products - List products with filters (public access)
 export async function GET(request: NextRequest) {
   try {
-    const auth = requireAuth(request);
-    if ("error" in auth) return auth.error;
 
     const searchParams = Object.fromEntries(request.nextUrl.searchParams);
     const parsed = productFilterSchema.safeParse(searchParams);

@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Public routes that don't need auth
-const publicRoutes = ["/api/auth/request-otp", "/api/auth/verify-otp"];
+const publicRoutes = [
+  "/api/auth/request-otp",
+  "/api/auth/verify-otp",
+  "/api/products",
+  "/api/inquiries",
+];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -30,8 +35,8 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Protected pages - check for token cookie
-  if (pathname.startsWith("/admin") || pathname.startsWith("/catalog")) {
+  // Protected pages - only admin requires login
+  if (pathname.startsWith("/admin")) {
     const token = request.cookies.get("access_token")?.value;
     if (!token) {
       return NextResponse.redirect(new URL("/login", request.url));
@@ -42,5 +47,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/:path*", "/admin/:path*", "/catalog/:path*"],
+  matcher: ["/api/:path*", "/admin/:path*"],
 };

@@ -7,7 +7,8 @@ Base URL: `http://localhost:3000`
 ## วิธีใช้งาน
 
 1. เริ่มจาก Request OTP → Verify OTP จะได้ `accessToken`
-2. นำ `accessToken` ไปใส่ใน Header `Authorization: Bearer <token>` ทุก request
+2. นำ `accessToken` ไปใส่ใน Header `Authorization: Bearer <token>` สำหรับ **Admin routes** เท่านั้น
+3. **Public routes** (ดูสินค้า, ส่ง inquiry) ไม่ต้องมี token
 
 ---
 
@@ -72,11 +73,10 @@ curl -X POST http://localhost:3000/api/auth/logout \
 
 ## 2. Products
 
-### List Products (พร้อม filter)
+### List Products (พร้อม filter) — Public
 
 ```bash
-curl -X GET "http://localhost:3000/api/products?page=1&limit=20" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+curl -X GET "http://localhost:3000/api/products?page=1&limit=20"
 ```
 
 **Filter parameters (ทั้งหมด optional):**
@@ -95,32 +95,26 @@ curl -X GET "http://localhost:3000/api/products?page=1&limit=20" \
 **ตัวอย่างใช้หลาย filter:**
 
 ```bash
-curl -X GET "http://localhost:3000/api/products?category=ring,earring&material=18K+Gold&size=small&status=new_arrival&sort=price_asc&page=1" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+curl -X GET "http://localhost:3000/api/products?category=ring,earring&material=18K+Gold&size=small&status=new_arrival&sort=price_asc&page=1"
 ```
 
 ### ค้นหาสินค้า (Search + Filter)
 
 ```bash
 # ค้นหาจากชื่อ/คำอธิบาย
-curl -X GET "http://localhost:3000/api/products?search=diamond" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+curl -X GET "http://localhost:3000/api/products?search=diamond"
 
 # ค้นหา + filter ประเภท
-curl -X GET "http://localhost:3000/api/products?search=gold&category=ring" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+curl -X GET "http://localhost:3000/api/products?search=gold&category=ring"
 
 # filter หลายสี (comma-separated)
-curl -X GET "http://localhost:3000/api/products?color=Gold,Silver,Rose+Gold" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+curl -X GET "http://localhost:3000/api/products?color=Gold,Silver,Rose+Gold"
 
 # filter หลายวัสดุ + หลายประเภท
-curl -X GET "http://localhost:3000/api/products?material=18K+Gold,925+Sterling+Silver&category=ring,earring" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+curl -X GET "http://localhost:3000/api/products?material=18K+Gold,925+Sterling+Silver&category=ring,earring"
 
 # รวมทุก filter: สี + วัสดุ + ขนาด + ประเภท + สถานะ + เรียงลำดับ
-curl -X GET "http://localhost:3000/api/products?color=Gold,Silver&material=18K+Gold&size=small,medium&category=ring,necklace&status=new_arrival&sort=price_asc&page=1" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+curl -X GET "http://localhost:3000/api/products?color=Gold,Silver&material=18K+Gold&size=small,medium&category=ring,necklace&status=new_arrival&sort=price_asc&page=1"
 ```
 
 **หมายเหตุ:** ทุก filter ใส่หลายค่าได้โดยคั่นด้วย comma (`,`)
@@ -130,11 +124,10 @@ curl -X GET "http://localhost:3000/api/products?color=Gold,Silver&material=18K+G
 | ภายในหมวดเดียวกัน | **OR** — เช่น `color=Gold,Silver` = ทองหรือเงิน |
 | ระหว่างหมวด | **AND** — เช่น `color=Gold&category=ring` = แหวนที่เป็นสีทอง |
 
-### Get Product Detail
+### Get Product Detail — Public
 
 ```bash
-curl -X GET http://localhost:3000/api/products/PRODUCT_ID \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+curl -X GET http://localhost:3000/api/products/PRODUCT_ID
 ```
 
 ### Create Product (Admin only)
@@ -169,11 +162,10 @@ curl -X DELETE http://localhost:3000/api/products/PRODUCT_ID \
 
 ## 3. Variants
 
-### List Variants ของ Product
+### List Variants ของ Product — Public
 
 ```bash
-curl -X GET http://localhost:3000/api/products/PRODUCT_ID/variants \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+curl -X GET http://localhost:3000/api/products/PRODUCT_ID/variants
 ```
 
 ### Create Variant (Admin only)
@@ -262,14 +254,15 @@ curl -X PUT http://localhost:3000/api/images/IMAGE_ID/reorder \
 
 ## 5. Inquiries
 
-### Submit Inquiry (Buyer)
+### Submit Inquiry — Public (ไม่ต้อง login)
 
 ```bash
 curl -X POST http://localhost:3000/api/inquiries \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -d "{\"name\": \"John\", \"email\": \"john@company.com\", \"company\": \"Jewelry Co.\", \"country\": \"Thailand\", \"message\": \"สนใจสั่งแหวนทอง 50 วง\", \"productId\": \"PRODUCT_ID\", \"variantId\": \"VARIANT_ID\"}"
 ```
+
+> **หมายเหตุ:** ถ้ามี `Authorization: Bearer` header ระบบจะผูก inquiry กับ user ให้อัตโนมัติ
 
 ### List Inquiries (Admin only)
 
@@ -350,6 +343,8 @@ curl -X GET http://localhost:3000/api/admin/stats \
 
 ## หมายเหตุ
 
+- ดูสินค้า (GET products/variants) และส่ง inquiry ไม่ต้อง login
+- Admin routes ทุกอัน ต้องมี `Authorization: Bearer` เสมอ
 - ใช้ OTP login เท่านั้น (ไม่มี password)
 - Access token หมดอายุใน 1 ชั่วโมง
 - Refresh token หมดอายุใน 7 วัน

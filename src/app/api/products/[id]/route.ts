@@ -1,17 +1,15 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, requireRole } from "@/lib/auth-guard";
+import { requireRole } from "@/lib/auth-guard";
 import { updateProductSchema } from "@/lib/validators";
 import { successResponse, errorResponse } from "@/lib/api-response";
 
-// GET /api/products/:id - Get product detail
+// GET /api/products/:id - Get product detail (public access)
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const auth = requireAuth(request);
-    if ("error" in auth) return auth.error;
 
     const { id } = await params;
 

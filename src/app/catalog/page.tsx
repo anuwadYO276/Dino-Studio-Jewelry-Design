@@ -149,7 +149,6 @@ export default function CatalogPage() {
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
-    const token = localStorage.getItem("access_token");
     const params = new URLSearchParams();
 
     if (filters.categories.length > 0)
@@ -165,9 +164,7 @@ export default function CatalogPage() {
     params.set("page", String(pagination.page));
 
     try {
-      const res = await fetch(`/api/products?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(`/api/products?${params.toString()}`);
       const data = await res.json();
       if (data.success) {
         setProducts(data.data.products);

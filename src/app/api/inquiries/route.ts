@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, requireRole, getTokenPayload } from "@/lib/auth-guard";
+import { requireRole, getTokenPayload } from "@/lib/auth-guard";
 import { createInquirySchema } from "@/lib/validators";
 import { successResponse, errorResponse } from "@/lib/api-response";
 
@@ -48,12 +48,9 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/inquiries - Submit inquiry (buyer)
+// POST /api/inquiries - Submit inquiry (public access)
 export async function POST(request: NextRequest) {
   try {
-    const auth = requireAuth(request);
-    if ("error" in auth) return auth.error;
-
     const payload = getTokenPayload(request);
     const body = await request.json();
     const parsed = createInquirySchema.safeParse(body);
@@ -65,7 +62,7 @@ export async function POST(request: NextRequest) {
     const inquiry = await prisma.inquiry.create({
       data: {
         ...parsed.data,
-        userId: payload?.userId,
+        userId: payload?.userId || null,
       },
       include: {
         product: { select: { id: true, name: true } },
