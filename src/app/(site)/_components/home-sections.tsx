@@ -21,10 +21,11 @@ export function CollectionIconStrip({
               <Link
                 key={c.slug}
                 href={`/collections/${c.slug}`}
-                className="heading-display shrink-0 snap-start text-xl lowercase text-neutral-800 transition-colors hover:text-[var(--collection-accent)] md:text-2xl"
+                className="strip-collection-link heading-display text-xl lowercase md:text-2xl"
                 style={{ "--collection-accent": theme.accent } as CSSProperties}
               >
                 {c.name.toLowerCase()}
+                <span className="strip-collection-link__mark" aria-hidden />
               </Link>
             );
           })}
@@ -44,9 +45,10 @@ export function CategoryStrip() {
             <Link
               key={cat.value}
               href={`/pieces?category=${cat.value}`}
-              className="nav-label shrink-0 snap-start text-neutral-500 transition-colors hover:text-neutral-900"
+              className="strip-category-link nav-label"
             >
               {cat.label}
+              <span className="strip-category-link__mark" aria-hidden />
             </Link>
           ))}
         </div>
