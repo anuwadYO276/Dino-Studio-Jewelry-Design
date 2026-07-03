@@ -1,20 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
+import { SITE_DESCRIPTION, SITE_NAME, pageMetadata } from "@/lib/site-metadata";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-display",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// ponytail: no Helvetica Neue files — Inter as controlled cross-platform body fallback
+const inter = Inter({
   subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-body",
 });
 
 export const metadata: Metadata = {
-  title: "Dino Studio | Private Jewelry Catalog",
-  description: "Premium wholesale jewelry catalog - access by invitation only",
+  ...pageMetadata(SITE_NAME, SITE_DESCRIPTION),
+  metadataBase: process.env.NEXT_PUBLIC_SITE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
+    : undefined,
 };
 
 export default function RootLayout({
@@ -25,9 +31,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
   );
 }

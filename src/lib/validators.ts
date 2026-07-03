@@ -56,6 +56,7 @@ export const updateInquiryStatusSchema = z.object({
 // Filter validators
 export const productFilterSchema = z.object({
   category: z.string().optional(),
+  collection: z.string().optional(),
   color: z.string().optional(),
   size: z.string().optional(),
   material: z.string().optional(),

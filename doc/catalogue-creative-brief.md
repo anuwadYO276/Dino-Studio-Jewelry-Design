@@ -82,7 +82,7 @@ Artistic + Soulful + Fashion + Minimal + Elegant
 | | |
 |---|---|
 | **Tagline (EN)** | Intricate forms inspired by the silent geometry of nature |
-| **Tagline (TH)** | รูปทรงซับซ้อน ได้รับแรงบันดาลใจจากเรขาคณิตเงียบงันของธรรมชาติ |
+| **Tagline (TH)** | รูปทรงซับซ้อน ได้รับแรงบันดาลใจจากเรขาคณิตเรียบงันของธรรมชาติ |
 
 ### Collection Name #6 — Wild Bloom
 
@@ -96,7 +96,13 @@ Artistic + Soulful + Fashion + Minimal + Elegant
 | | |
 |---|---|
 | **Tagline (EN)** | Silent stories carried by petals and wind |
-| **Tagline (TH)** | เรื่องราวเงียบงัน ถูกส่งต่อด้วยดอกไม้และสายลม |
+| **Tagline (TH)** | เรื่องราวเรียบงัน ถูกส่งต่อด้วยดอกไม้และสายลม |
+| **Hero flower** | Anemone (windflower) — กลีบบาง โค้งนุ่ม สื่อ “ลม + กลีบ” |
+| **Secondary motifs** | Wild rose, cosmos, meadow bloom |
+| **Material focus** | Sterling silver, sandblasted finish |
+| **Mood** | Quiet luxury · Silver florals · European garden |
+| **Hero image** | Local: sterling silver floral earrings on driftwood (`public/collections/botanical-whispers-hero.png`) |
+| **Editorial image** | Local: product still life — same collection (`public/collections/botanical-whispers-editorial.png`) |
 
 ### Collection Name #8 — Fallen Petals
 
@@ -154,7 +160,7 @@ Meticulously finished with a sophisticated sandblasted texture, the sterling sil
 
 **Thai:**
 
-> เครื่องประดับผ่านการตกแต่งอย่างพิถีพิถันด้วยเทคนิคขัดทรายอ่อน ๆ เผยประกายแสงที่นุ่มนวลและงดงาม ย้ำความบริสุทธิ์และคุณค่าของโลหะมีค่า โดยออกแบบให้สะท้อนความหรูหราในเงียบ แต่ละชิ้นเป็นคำกล่าวถึงความสง่างามเหนือกาลเวลา สะท้อนความสง่างามในโอกาสสวมใส่
+> เครื่องประดับผ่านการตกแต่งอย่างพิถีพิถันด้วยเทคนิคขัดทรายอ่อน ๆ เผยประกายแสงที่นุ่มนวลและงดงาม ย้ำความบริสุทธิ์และคุณค่าของโลหะมีค่า โดยออกแบบให้สะท้อนความหรูหราในเรียบ แต่ละชิ้นเป็นคำกล่าวถึงความสง่างามเหนือกาลเวลา สะท้อนความสง่างามในโอกาสสวมใส่
 
 ---
 
@@ -168,7 +174,7 @@ Meticulously finished with a sophisticated sandblasted texture, the sterling sil
 
 **Refined Simplicity, Timeless Elegance**
 
-> ความหรูหราในเงียบ — คงคุณค่าเหนือกาลเวลา
+> ความหรูหราในเรียบ — คงคุณค่าเหนือกาลเวลา
 
 ---
 
@@ -185,7 +191,7 @@ Meticulously finished with a sophisticated sandblasted texture, the sterling sil
 
 **Cormorant Garamond + Helvetica Neue**
 
-> เงียบ หรู แพง / ใช้ตัวอักษรเล็ก และมี white space มาก เหมือน Catalogue ของแบรนด์ยุโรป
+> เรียบ หรู แพง / ใช้ตัวอักษรเล็ก และมี white space มาก เหมือน Catalogue ของแบรนด์ยุโรป
 
 ---
 

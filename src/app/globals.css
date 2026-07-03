@@ -8,19 +8,111 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: "Helvetica Neue", var(--font-body), Helvetica, Arial, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-display), ui-serif, Georgia, "Times New Roman", serif;
+  }
+
+  /* Display — lowercase editorial (brief: European catalogue) */
+  .brand-mark {
+    @apply font-[family-name:var(--font-display)] text-lg font-light tracking-wide text-neutral-900 sm:text-xl;
+  }
+
+  .heading-display {
+    @apply font-[family-name:var(--font-display)] font-light tracking-normal text-neutral-900;
+  }
+
+  /* Section labels — italic Cormorant, not ALL CAPS */
+  .section-eyebrow {
+    @apply font-[family-name:var(--font-display)] text-sm font-light italic tracking-normal text-neutral-400;
+  }
+
+  .section-eyebrow-sm {
+    @apply font-[family-name:var(--font-display)] text-xs font-light italic tracking-normal text-neutral-400;
+  }
+
+  /* Nav — restrained uppercase for usability */
+  .nav-label {
+    @apply text-[11px] tracking-[0.12em] uppercase text-neutral-500;
+  }
+
+  .btn-nav {
+    @apply border border-neutral-900 px-3 py-1.5 text-[11px] tracking-[0.12em] uppercase text-neutral-900 transition-colors hover:bg-neutral-900 hover:text-white sm:px-4 sm:py-2;
+  }
+
+  /* CTAs — sentence case (brief: explore collection) */
+  .btn-catalogue {
+    @apply inline-block border px-6 py-3 text-sm tracking-wide transition-colors;
+  }
+
+  .btn-catalogue-outline {
+    @apply border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white;
+  }
+
+  .btn-catalogue-solid {
+    @apply border-neutral-900 bg-neutral-900 text-white hover:opacity-80;
+  }
+
+  .btn-catalogue-hero {
+    @apply inline-block border px-6 py-3 text-sm tracking-wide text-white transition-colors hover:text-neutral-900;
+  }
+
+  .text-link {
+    @apply text-sm tracking-wide text-neutral-500 underline underline-offset-4 transition-colors hover:text-neutral-900;
+  }
+
+  .form-label {
+    @apply text-xs tracking-wide text-neutral-400;
+  }
+
+  .meta-label {
+    @apply text-[11px] tracking-[0.12em] uppercase text-neutral-400;
+  }
+
+  .page-shell {
+    @apply mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24;
+  }
+
+  .page-shell-narrow {
+    @apply mx-auto max-w-2xl px-6 py-16 lg:px-10 lg:py-24;
+  }
+
+  .strip-scroll {
+    scrollbar-width: none;
+  }
+
+  .strip-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-on-scroll {
+      animation: reveal-up 0.7s ease-out both;
+    }
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

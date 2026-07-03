@@ -1,0 +1,808 @@
+import type { CSSProperties } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { CollectionMotif } from "./collection-motif";
+import { CollectionPreview } from "./product-grid";
+import {
+  collectionTypeStyle,
+  getFeaturedSectionStyle,
+  heroUsesLightText,
+  type CollectionTheme,
+} from "@/lib/collection-theme";
+import type { ShowcaseCollection } from "@/lib/mock-catalogue-data";
+
+interface SectionProps {
+  collection: ShowcaseCollection;
+  slug: string;
+  theme: CollectionTheme;
+}
+
+export function CollectionHeroSection({
+  collection,
+  slug,
+  theme,
+}: SectionProps) {
+  const headingStyle = collectionTypeStyle(theme);
+  const onDark = heroUsesLightText(theme.layoutProfile);
+
+  switch (theme.layoutProfile) {
+    case "petals-inset":
+    case "fragments-collage":
+      return (
+        <InsetHero
+          collection={collection}
+          slug={slug}
+          theme={theme}
+          headingStyle={headingStyle}
+        />
+      );
+    case "architecture-structure":
+    case "woven-geometry":
+      return (
+        <SplitHero
+          collection={collection}
+          slug={slug}
+          theme={theme}
+          headingStyle={headingStyle}
+          imageFirst={theme.layoutProfile === "architecture-structure"}
+        />
+      );
+    case "gold-tribal-center":
+      return (
+        <CenteredHero
+          collection={collection}
+          slug={slug}
+          theme={theme}
+          headingStyle={headingStyle}
+        />
+      );
+    default:
+      return (
+        <FullBleedHero
+          collection={collection}
+          slug={slug}
+          theme={theme}
+          headingStyle={headingStyle}
+          onDark={onDark}
+          align={theme.layoutProfile === "relics-heritage" ? "start" : "end"}
+        />
+      );
+  }
+}
+
+export function CollectionEditorialSection({
+  collection,
+  theme,
+}: Omit<SectionProps, "slug">) {
+  const headingStyle = collectionTypeStyle(theme);
+
+  switch (theme.layoutProfile) {
+    case "botanical-split":
+      return (
+        <SplitEditorial
+          collection={collection}
+          theme={theme}
+          headingStyle={headingStyle}
+          imageRight
+        />
+      );
+    case "petals-inset":
+      return (
+        <FramedEditorial collection={collection} theme={theme} headingStyle={headingStyle} />
+      );
+    case "bloom-cinematic":
+      return (
+        <CinematicEditorial collection={collection} theme={theme} headingStyle={headingStyle} />
+      );
+    case "gold-tribal-center":
+      return (
+        <FramedEditorial collection={collection} theme={theme} headingStyle={headingStyle} wide />
+      );
+    case "fragments-collage":
+      return (
+        <CollageEditorial collection={collection} theme={theme} headingStyle={headingStyle} />
+      );
+    case "relics-heritage":
+      return (
+        <HeritageEditorial collection={collection} theme={theme} headingStyle={headingStyle} />
+      );
+    case "architecture-structure":
+      return (
+        <StructureEditorial collection={collection} theme={theme} headingStyle={headingStyle} />
+      );
+    case "woven-geometry":
+      return (
+        <GeometryEditorial collection={collection} theme={theme} headingStyle={headingStyle} />
+      );
+    default:
+      return null;
+  }
+}
+
+export function CollectionFeaturedSection({
+  slug,
+  collectionName,
+  theme,
+}: {
+  slug: string;
+  collectionName: string;
+  theme: CollectionTheme;
+}) {
+  const style = getFeaturedSectionStyle(theme.layoutProfile);
+
+  return (
+    <section style={{ backgroundColor: theme.accentMuted }}>
+      <div className="mx-auto max-w-7xl px-6 pb-24 lg:px-10">
+        <div
+          className={`py-16 ${style.centered ? "text-center" : ""} ${
+            style.borderAccent === "left"
+              ? "border-l-4 pl-8 lg:pl-12"
+              : style.borderAccent === "top"
+                ? "border-t-4 pt-12"
+                : ""
+          }`}
+          style={
+            style.borderAccent !== "none"
+              ? { borderColor: theme.accent }
+              : undefined
+          }
+        >
+          <p className="section-eyebrow mb-2 text-neutral-600">
+            {style.sectionLabel}
+          </p>
+          <div
+            className={`mb-10 h-px w-12 ${style.centered ? "mx-auto" : ""}`}
+            style={{ backgroundColor: theme.accent }}
+          />
+          <div
+            className="relative mb-10 h-20 overflow-hidden"
+            aria-hidden
+          >
+            <CollectionMotif
+              motif={theme.motif}
+              color={theme.accent}
+              opacity={style.motifOpacity}
+            />
+          </div>
+          <CollectionPreview
+            collectionSlug={slug}
+            collectionName={collectionName}
+            accentColor={theme.accent}
+            limit={style.limit}
+            gridClass={style.gridClass}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function CollectionInquiryStrip({
+  slug,
+  collectionName,
+  theme,
+}: {
+  slug: string;
+  collectionName: string;
+  theme: CollectionTheme;
+}) {
+  return (
+    <section
+      className="border-t"
+      style={{ borderColor: `${theme.accent}40` }}
+    >
+      <div
+        className="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-16 md:flex-row md:items-center md:justify-between lg:px-10"
+        style={{ backgroundColor: theme.accentMuted }}
+      >
+        <div>
+          <p className="section-eyebrow">Wholesale</p>
+          <p className="heading-display mt-2 text-xl md:text-2xl">
+            {collectionName}
+          </p>
+          <p className="mt-2 max-w-md text-sm text-neutral-600">
+            Request pricing and availability for international buyers.
+          </p>
+        </div>
+        <Link
+          href={`/inquiry?collection=${slug}`}
+          className="btn-catalogue shrink-0 border px-8 py-4 transition-colors hover:bg-neutral-900 hover:text-white"
+          style={{ borderColor: theme.accent, color: theme.accent }}
+        >
+          Request a wholesale quote
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function HeroIntro({
+  collection,
+  slug,
+  theme,
+  headingStyle,
+  onDark,
+}: {
+  collection: ShowcaseCollection;
+  slug: string;
+  theme: CollectionTheme;
+  headingStyle: CSSProperties;
+  onDark: boolean;
+}) {
+  const backLink = onDark
+    ? "text-link text-white/70 hover:text-white"
+    : "text-link";
+
+  return (
+    <>
+      <Link href="/#collections" className={`${backLink} text-sm`}>
+        ← All collections
+      </Link>
+      <p
+        className="section-eyebrow mt-6 not-italic"
+        style={{ color: onDark ? theme.accent : theme.accent }}
+      >
+        {collection.mood}
+      </p>
+      <h1
+        className={`heading-display mt-3 text-5xl md:text-6xl ${onDark ? "text-white" : "text-neutral-900"}`}
+        style={headingStyle}
+      >
+        {collection.name}
+      </h1>
+      <p
+        className={`mt-4 max-w-xl text-sm leading-relaxed ${onDark ? "text-white/85" : "text-neutral-700"}`}
+        style={theme.typeAccent.italic ? { fontStyle: "italic" } : undefined}
+      >
+        {collection.tagline}
+      </p>
+      <Link
+        href={`/pieces?collection=${slug}`}
+        className={
+          onDark
+            ? "btn-catalogue-hero mt-8 hover:bg-[var(--collection-accent)]"
+            : "btn-catalogue btn-catalogue-outline mt-8"
+        }
+        style={onDark ? { borderColor: theme.accent } : undefined}
+      >
+        View all pieces
+      </Link>
+    </>
+  );
+}
+
+function FullBleedHero({
+  collection,
+  slug,
+  theme,
+  headingStyle,
+  onDark,
+  align,
+}: SectionProps & {
+  headingStyle: CSSProperties;
+  onDark: boolean;
+  align: "start" | "end";
+}) {
+  return (
+    <section
+      className={`relative flex min-h-[75vh] ${align === "start" ? "items-start" : "items-end"}`}
+    >
+      <Image
+        src={collection.heroImage}
+        alt={collection.name}
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
+      />
+      <div className="absolute inset-0" style={{ background: theme.heroGradient }} />
+      <CollectionMotif motif={theme.motif} color="#ffffff" opacity={0.22} />
+      <div
+        className="absolute bottom-0 left-0 h-px w-full"
+        style={{ backgroundColor: theme.accent }}
+      />
+      <div
+        className={`relative z-10 mx-auto w-full max-w-7xl px-6 lg:px-10 ${
+          align === "start" ? "py-20" : "pb-16 lg:pb-20"
+        }`}
+      >
+        <HeroIntro
+          collection={collection}
+          slug={slug}
+          theme={theme}
+          headingStyle={headingStyle}
+          onDark={onDark}
+        />
+      </div>
+    </section>
+  );
+}
+
+function CenteredHero({ collection, slug, theme, headingStyle }: SectionProps & { headingStyle: CSSProperties }) {
+  return (
+    <section className="relative flex min-h-[80vh] items-center justify-center text-center">
+      <Image
+        src={collection.heroImage}
+        alt={collection.name}
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
+      />
+      <div className="absolute inset-0" style={{ background: theme.heroGradient }} />
+      <CollectionMotif motif={theme.motif} color="#ffffff" opacity={0.22} />
+      <div className="relative z-10 mx-auto max-w-3xl px-6 py-20">
+        <Link href="/#collections" className="text-link text-sm text-white/70 hover:text-white">
+          ← All collections
+        </Link>
+        <p
+          className="section-eyebrow mx-auto mt-6 not-italic"
+          style={{ color: theme.accent }}
+        >
+          {collection.mood}
+        </p>
+        <h1
+          className="heading-display mt-4 text-5xl text-white md:text-7xl"
+          style={headingStyle}
+        >
+          {collection.name}
+        </h1>
+        <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-white/85">
+          {collection.tagline}
+        </p>
+        <Link
+          href={`/pieces?collection=${slug}`}
+          className="btn-catalogue-hero mx-auto mt-10 hover:bg-[var(--collection-accent)]"
+          style={{ borderColor: theme.accent }}
+        >
+          View all pieces
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function InsetHero({ collection, slug, theme, headingStyle }: SectionProps & { headingStyle: CSSProperties }) {
+  return (
+    <section className="px-6 pt-10 lg:px-10 lg:pt-14">
+      <div
+        className="mx-auto max-w-6xl p-4 md:p-6 lg:p-8"
+        style={{ backgroundColor: theme.accentMuted }}
+      >
+        <div className="relative aspect-[16/10] overflow-hidden">
+          <Image
+            src={collection.heroImage}
+            alt={collection.name}
+            fill
+            priority
+            sizes="(max-width:1280px) 100vw, 1152px"
+            className="object-cover"
+          />
+          <div className="absolute inset-0" style={{ background: theme.heroGradient }} />
+          <CollectionMotif motif={theme.motif} color="#ffffff" opacity={0.22} />
+        </div>
+      </div>
+      <div className="mx-auto max-w-3xl px-2 pb-16 pt-12 lg:pb-20">
+        <HeroIntro
+          collection={collection}
+          slug={slug}
+          theme={theme}
+          headingStyle={headingStyle}
+          onDark={false}
+        />
+      </div>
+    </section>
+  );
+}
+
+function SplitHero({
+  collection,
+  slug,
+  theme,
+  headingStyle,
+  imageFirst,
+}: SectionProps & { headingStyle: CSSProperties; imageFirst: boolean }) {
+  const image = (
+    <div className="relative min-h-[45vh] lg:min-h-full">
+      <Image
+        src={collection.heroImage}
+        alt={collection.name}
+        fill
+        priority
+        sizes="(max-width:1024px) 100vw, 50vw"
+        className="object-cover"
+      />
+      <CollectionMotif motif={theme.motif} color={theme.accent} />
+    </div>
+  );
+  const copy = (
+    <div
+      className="flex flex-col justify-end px-6 py-16 lg:px-12 lg:py-20"
+      style={{ backgroundColor: theme.accentMuted }}
+    >
+      <HeroIntro
+        collection={collection}
+        slug={slug}
+        theme={theme}
+        headingStyle={headingStyle}
+        onDark={false}
+      />
+    </div>
+  );
+
+  return (
+    <section className="grid min-h-[75vh] lg:grid-cols-2">
+      {imageFirst ? (
+        <>
+          {image}
+          {copy}
+        </>
+      ) : (
+        <>
+          <div className="order-2 lg:order-2">{copy}</div>
+          <div className="order-1 lg:order-1">{image}</div>
+        </>
+      )}
+    </section>
+  );
+}
+
+function SplitEditorial({
+  collection,
+  theme,
+  headingStyle,
+  imageRight,
+}: {
+  collection: ShowcaseCollection;
+  theme: CollectionTheme;
+  headingStyle: CSSProperties;
+  imageRight: boolean;
+}) {
+  const copy = (
+    <div className={imageRight ? "order-2 lg:order-1" : "order-2 lg:order-2"}>
+      <p className="section-eyebrow text-neutral-600">Editorial</p>
+      <p
+        className="heading-display mt-6 text-2xl leading-relaxed text-neutral-900 md:text-3xl"
+        style={headingStyle}
+      >
+        &ldquo;{collection.tagline}&rdquo;
+      </p>
+      {theme.moodCopy && (
+        <p className="mt-8 text-sm leading-relaxed text-neutral-700">{theme.moodCopy}</p>
+      )}
+    </div>
+  );
+  const image = (
+    <div
+      className={`relative order-1 aspect-[4/5] overflow-hidden ${imageRight ? "lg:order-2" : "lg:order-1"}`}
+      style={{ boxShadow: `inset 0 0 0 1px ${theme.accent}40` }}
+    >
+      <Image
+        src={collection.editorialImage}
+        alt={`${collection.name} editorial`}
+        fill
+        sizes="50vw"
+        className="object-cover"
+      />
+      <div className="absolute inset-0" style={{ backgroundColor: theme.editorialOverlay }} />
+      <CollectionMotif motif={theme.motif} color={theme.accent} />
+    </div>
+  );
+
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
+      <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+        {copy}
+        {image}
+      </div>
+    </section>
+  );
+}
+
+function FramedEditorial({
+  collection,
+  theme,
+  headingStyle,
+  wide = false,
+}: {
+  collection: ShowcaseCollection;
+  theme: CollectionTheme;
+  headingStyle: CSSProperties;
+  wide?: boolean;
+}) {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
+      <div className="p-4 md:p-8" style={{ backgroundColor: theme.accentMuted }}>
+        <div className={`relative overflow-hidden ${wide ? "aspect-[21/9]" : "aspect-[4/3]"}`}>
+          <Image
+            src={collection.editorialImage}
+            alt={`${collection.name} editorial`}
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0" style={{ backgroundColor: theme.editorialOverlay }} />
+          <CollectionMotif motif={theme.motif} color={theme.accent} />
+        </div>
+        <div className="mx-auto max-w-2xl px-2 pt-10 text-center">
+          <p
+            className="heading-display text-xl text-neutral-900 md:text-2xl"
+            style={headingStyle}
+          >
+            &ldquo;{collection.tagline}&rdquo;
+          </p>
+          {theme.moodCopy && (
+            <p className="mt-6 text-sm leading-relaxed text-neutral-700">{theme.moodCopy}</p>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CinematicEditorial({
+  collection,
+  theme,
+  headingStyle,
+}: {
+  collection: ShowcaseCollection;
+  theme: CollectionTheme;
+  headingStyle: CSSProperties;
+}) {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
+      <div className="relative aspect-[21/9] overflow-hidden">
+        <Image
+          src={collection.editorialImage}
+          alt={`${collection.name} editorial`}
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 55%, transparent 100%)",
+          }}
+        />
+        <CollectionMotif motif={theme.motif} color="#ffffff" opacity={0.22} />
+        <div className="absolute bottom-0 left-0 flex w-full flex-col gap-4 p-6 md:p-10">
+          <p
+            className="max-w-md font-display text-lg text-white md:text-xl"
+            style={headingStyle}
+          >
+            {collection.tagline}
+          </p>
+          {theme.moodCopy && (
+            <p className="max-w-lg text-sm leading-relaxed text-white/85">{theme.moodCopy}</p>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CollageEditorial({
+  collection,
+  theme,
+  headingStyle,
+}: {
+  collection: ShowcaseCollection;
+  theme: CollectionTheme;
+  headingStyle: CSSProperties;
+}) {
+  const second = collection.editorialImage2 ?? collection.heroImage;
+
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
+      <div className="grid gap-10 lg:grid-cols-12 lg:items-start">
+        <div className="lg:col-span-4">
+          <p className="section-eyebrow text-neutral-600">Editorial</p>
+          <p
+            className="heading-display mt-6 text-2xl leading-relaxed text-neutral-900"
+            style={headingStyle}
+          >
+            &ldquo;{collection.tagline}&rdquo;
+          </p>
+          {theme.moodCopy && (
+            <p className="mt-8 text-sm leading-relaxed text-neutral-700">{theme.moodCopy}</p>
+          )}
+        </div>
+        <div className="grid gap-4 lg:col-span-8 lg:grid-cols-5">
+          <div
+            className="relative aspect-[3/4] overflow-hidden lg:col-span-3"
+            style={{ boxShadow: `inset 0 0 0 1px ${theme.accent}40` }}
+          >
+            <Image
+              src={collection.editorialImage}
+              alt={`${collection.name} editorial`}
+              fill
+              sizes="40vw"
+              className="object-cover"
+            />
+            <CollectionMotif motif={theme.motif} color={theme.accent} />
+          </div>
+          <div
+            className="relative aspect-square overflow-hidden lg:col-span-2 lg:mt-16"
+            style={{ boxShadow: `inset 0 0 0 1px ${theme.accent}40` }}
+          >
+            <Image
+              src={second}
+              alt={`${collection.name} detail`}
+              fill
+              sizes="25vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HeritageEditorial({
+  collection,
+  theme,
+  headingStyle,
+}: {
+  collection: ShowcaseCollection;
+  theme: CollectionTheme;
+  headingStyle: CSSProperties;
+}) {
+  const detailImages = collection.editorialImage2
+    ? [
+        {
+          src: collection.editorialImage2,
+          alt: `${collection.name} sandblasted silver detail`,
+          label: "Sandblasted finish",
+        },
+        {
+          src: collection.heroImage,
+          alt: `${collection.name} gold detail`,
+          label: "Gold accent",
+        },
+      ]
+    : null;
+
+  return (
+    <section className="border-t border-neutral-200">
+      <div className="relative aspect-[21/9] overflow-hidden">
+        <Image
+          src={collection.editorialImage}
+          alt={`${collection.name} editorial`}
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0" style={{ backgroundColor: theme.editorialOverlay }} />
+      </div>
+      <div style={{ backgroundColor: theme.accentMuted }}>
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-2 lg:px-10">
+          <div>
+            <p className="section-eyebrow not-italic text-neutral-600">The collection</p>
+            <p
+              className="heading-display mt-4 text-2xl text-neutral-900"
+              style={headingStyle}
+            >
+              &ldquo;{collection.tagline}&rdquo;
+            </p>
+          </div>
+          {theme.moodCopy && (
+            <p className="text-sm leading-relaxed text-neutral-700 lg:pt-8">{theme.moodCopy}</p>
+          )}
+        </div>
+        {detailImages && (
+          <div className="mx-auto max-w-7xl px-6 pb-16 lg:px-10">
+            <p className="section-eyebrow mb-6 not-italic text-neutral-600">Material story</p>
+            <div className="grid gap-4 md:grid-cols-2">
+              {detailImages.map(({ src, alt, label }) => (
+                <div key={label}>
+                  <div
+                    className="relative aspect-[4/3] overflow-hidden"
+                    style={{ boxShadow: `inset 0 0 0 1px ${theme.accent}40` }}
+                  >
+                    <Image src={src} alt={alt} fill sizes="50vw" className="object-cover" />
+                  </div>
+                  <p className="meta-label mt-3 text-neutral-500">{label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function StructureEditorial({
+  collection,
+  theme,
+  headingStyle,
+}: {
+  collection: ShowcaseCollection;
+  theme: CollectionTheme;
+  headingStyle: CSSProperties;
+}) {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
+      <div
+        className="grid gap-10 border-l-4 pl-8 lg:grid-cols-2 lg:items-center lg:pl-12"
+        style={{ borderColor: theme.accent }}
+      >
+        <div>
+          <p className="section-eyebrow text-neutral-600">Structure</p>
+          <p
+            className="heading-display mt-6 text-2xl leading-relaxed text-neutral-900"
+            style={headingStyle}
+          >
+            &ldquo;{collection.tagline}&rdquo;
+          </p>
+          {theme.moodCopy && (
+            <p className="mt-8 text-sm leading-relaxed text-neutral-700">{theme.moodCopy}</p>
+          )}
+        </div>
+        <div className="relative aspect-[4/3] overflow-hidden">
+          <Image
+            src={collection.editorialImage}
+            alt={`${collection.name} editorial`}
+            fill
+            sizes="50vw"
+            className="object-cover"
+          />
+          <CollectionMotif motif={theme.motif} color={theme.accent} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function GeometryEditorial({
+  collection,
+  theme,
+  headingStyle,
+}: {
+  collection: ShowcaseCollection;
+  theme: CollectionTheme;
+  headingStyle: CSSProperties;
+}) {
+  const cells = [
+    collection.editorialImage,
+    collection.heroImage,
+    collection.editorialImage,
+    collection.heroImage,
+  ];
+
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
+      <div className="mb-10 max-w-xl">
+        <p className="section-eyebrow text-neutral-600">Geometry</p>
+        <p
+          className="heading-display mt-4 text-2xl text-neutral-900"
+          style={headingStyle}
+        >
+          &ldquo;{collection.tagline}&rdquo;
+        </p>
+        {theme.moodCopy && (
+          <p className="mt-6 text-sm leading-relaxed text-neutral-700">{theme.moodCopy}</p>
+        )}
+      </div>
+      <div className="grid grid-cols-2 gap-2 md:gap-3">
+        {cells.map((src, i) => (
+          <div key={i} className="relative aspect-square overflow-hidden">
+            <Image
+              src={src}
+              alt={`${collection.name} geometry ${i + 1}`}
+              fill
+              sizes="25vw"
+              className="object-cover"
+            />
+            {i === 0 && (
+              <CollectionMotif motif={theme.motif} color={theme.accent} className="opacity-30" />
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}

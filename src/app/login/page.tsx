@@ -1,13 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Step = "identifier" | "otp";
 type OtpType = "email" | "phone";
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextPath = searchParams.get("next") ?? "/admin";
   const [step, setStep] = useState<Step>("identifier");
   const [identifier, setIdentifier] = useState("");
   const [otpType, setOtpType] = useState<OtpType>("email");
@@ -67,12 +77,20 @@ export default function LoginPage() {
       // Set cookie for middleware
       document.cookie = `access_token=${data.data.accessToken}; path=/; max-age=3600`;
 
-      // Redirect based on role
-      if (data.data.user.role === "admin") {
-        router.push("/admin");
-      } else {
-        router.push("/catalog");
+      if (data.data.user.role !== "admin") {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("user");
+        document.cookie = "access_token=; path=/; max-age=0";
+        setError("Admin access only. Contact your administrator.");
+        return;
       }
+
+      const dest =
+        nextPath.startsWith("/admin") && !nextPath.startsWith("//")
+          ? nextPath
+          : "/admin";
+      router.push(dest);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -85,11 +103,11 @@ export default function LoginPage() {
       <div className="w-full max-w-md px-8">
         {/* Logo / Brand */}
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-light tracking-widest text-stone-800 uppercase">
+          <h1 className="mt-3 font-display text-3xl font-light tracking-widest text-stone-800 uppercase">
             Dino Studio
           </h1>
           <p className="mt-2 text-sm text-stone-500 tracking-wide">
-            Private Jewelry Catalog
+            Admin Panel
           </p>
         </div>
 
@@ -220,7 +238,7 @@ export default function LoginPage() {
         </div>
 
         <p className="mt-6 text-center text-xs text-stone-400">
-          Access by invitation only
+          Authorized administrators only
         </p>
       </div>
     </div>

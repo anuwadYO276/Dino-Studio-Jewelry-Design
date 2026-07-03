@@ -1,0 +1,77 @@
+{
+  "version": "30.4.0",
+  "updated": "2026-07-03",
+  "sitemap": [
+    {
+      "path": "/",
+      "name": "Home",
+      "description": "Hybrid maison hub — hero (Botanical Whispers) → icon strip → categories → story → signature → cinematic editorials → collection grid → featured pieces → client relations. Transparent nav on hero."
+    },
+    {
+      "path": "/collections/[slug]",
+      "name": "Collection",
+      "description": "8 layout profiles — hero, editorial, per-profile featured grid, wholesale inquiry strip. Public."
+    },
+    {
+      "path": "/pieces",
+      "name": "All Pieces",
+      "description": "Category strip + catalogue grid, filters, pagination. Public. API: GET /api/products"
+    },
+    {
+      "path": "/pieces?category=[type]",
+      "name": "All Pieces (by form)",
+      "description": "Catalogue pre-filtered by category from homepage strip. Public."
+    },
+    {
+      "path": "/pieces?collection=[slug]",
+      "name": "All Pieces (filtered)",
+      "description": "Same as /pieces with collection pre-filter. Public."
+    },
+    {
+      "path": "/products/[id]",
+      "name": "Product",
+      "description": "Product detail — variants, images, quote CTA. Public. API: GET /api/products/:id"
+    },
+    {
+      "path": "/inquiry",
+      "name": "Inquiry",
+      "description": "Wholesale inquiry form only (no footer embed). Public. API: POST /api/inquiries"
+    },
+    {
+      "path": "/login",
+      "name": "Admin Login",
+      "description": "OTP login for administrators — supports ?next= redirect to /admin"
+    }
+  ],
+  "redirects": [
+    { "from": "/catalog", "to": "/pieces" },
+    { "from": "/catalog/:id", "to": "/products/:id" },
+    { "from": "/catalog/inquiry", "to": "/inquiry" }
+  ],
+  "data": "<mxfile host=\"app.diagrams.net\"><diagram name=\"Page-1\" id=\"moX8jcx4H6Qijn_ThA8R\">7Vrfc9soEP5r9JiO0G8/Wo7TTi+d6Yxv5tpHKhGJOyR8CNf2/fWHLDASil0nFYnTuyeLZXeR9/t2F7Adf1Ht3jO4Lj/RHBHHc/Od4986ngcCEIiPVrLvJHHgd4KC4VwqacEK/4Ok0JXSDc5RM1DklBKO10NhRusaZXwgg4zR7VDtgZLhqmtYoJFglUEylv6Bc1520iR0tfwDwkWpVgaunKmgUpaCpoQ53fZE/tLxF4xS3j1VuwUibfBUXDq7uxOzxxdjqOaXGCTRfZiuGvjpffMR/H1/t7tzf7sBSecG5aMwaL9S1NANy9AZZ57U43sVvdbtSg4p4yUtaA3JUktTRjd1jtpXdMVI69xTuhZCIIR/Is73khlww6kQlbwichbtMP/Smr+LQzn8Kr21z7e7/mCvBjVn+y/9wcHmXaiG2uwwUnaSgJAViJ8JRHKEV+QFohUSPoQdQwRy/H0YaCgJWhz1pOmcMbjvKawprnnT8/y5FQgFmWtBGHYeZaaZdDDUge/+jLqfDPTFQ/e+atT74lp0YOQT2Omd5qLmmGZQS4dtiTlareGBqFtRk4Zs6ay/Q7KR1k1JtxlskJxAjKNdb6UxiGUv2yMZk62uDEClu/TiR0NUAvc07L1gPj1WswkT2X/dRO7nMbgwj3Xqfu3PvW4e/xSgvn3yrxmucPtNboq2L1pKAc8dlg4Q2sqBwG4zq/N5u6MQo4zApsHZMLzDDDjSud+UjtR+FTr7IwL8GF+F1aOc74F+DtMT/cqghQ8MFx1E0upMawpCo5NFhqMuMCNHU3Wp8JJEFTnFh3R5LFkbzuhfaEEJZUJY07qtrA+YEEMECS7qlodiRSTkaZu1WOxa53Kiwnn+SFkeESCjhIhtM6Z186z098fpHxvZb6AT20p+RZ9Jsj96gx0w/uVaYPQC+z+YMZTfPDBYVEjur200QbPa2WuC8TU2wevZ00VX1QRD49CWPLMHRoHRA80ya7kHgimPH8kbLL42qApOlJ6XKb6J/eI7P7zFZ4wyJApvBKvWoP7WtB+/l+JM7i4gh4QWG3vnc8/YhVqry+BMRkx3oKP5JrPXxcxoBfaiddHdz5Xuqp2l66SJkwD5MBMHU9fCVvt42XziJATMI9V08Fx0O3Hd8Mznh4eZkyQKMLF3csXKrXvBdKmmUEw9Dac0nCmdWD141rCNjQ5vL/WC/7F9WWyBeYNh7ZYYvOXLCoVDqrCamVhJGGe69EoiHIE9EEFO+Sb481Hl1lO+6TANhq8hrEbc0bRaDv30+XWryagZOhHRzFNoZOx2zKuy6Yh20dn9Vyea0fVdkzEpMB3rpaLJSGBUm9DYxAH1E9XkJFAL/bdJ8MNqMw/VlKscumZxSGPT6rjEUyuSrdpiNLHgGbQSQ/2HiO5uQv+txF/+Cw==</diagram></mxfile>",
+  "dataNote": "Draw.io visual may be outdated — use sitemap + pages.cells for current routes. Re-draw in diagrams.net if needed.",
+  "pages": [
+    {
+      "id": "moX8jcx4H6Qijn_ThA8R",
+      "name": "Public site flow",
+      "cells": [
+        { "id": "1", "type": "layer" },
+
+        { "id": "home", "type": "node", "parent": "1", "label": "/", "note": "Maison hub — hero, icons, categories, story, cinematics, grid, featured, client relations" },
+        { "id": "col-slug", "type": "node", "parent": "1", "label": "/collections/[slug]", "note": "8 layout profiles + inquiry strip — public" },
+        { "id": "login", "type": "node", "parent": "1", "label": "/login", "note": "Admin OTP only" },
+        { "id": "pieces", "type": "node", "parent": "1", "label": "/pieces", "note": "Category strip + catalogue — public" },
+        { "id": "pieces-filtered", "type": "node", "parent": "1", "label": "/pieces?collection=[slug]", "note": "Filtered catalogue — public" },
+        { "id": "product", "type": "node", "parent": "1", "label": "/products/[id]", "note": "Product detail — public" },
+        { "id": "inquiry", "type": "node", "parent": "1", "label": "/inquiry", "note": "Wholesale form — public" },
+
+        { "id": "e-home-col", "type": "edge", "parent": "1", "source": "home", "target": "col-slug", "label": "Explore collection" },
+        { "id": "e-home-pieces", "type": "edge", "parent": "1", "source": "home", "target": "pieces", "label": "View all pieces" },
+        { "id": "e-nav-inquiry", "type": "edge", "parent": "1", "source": "home", "target": "inquiry", "label": "nav Inquiry" },
+        { "id": "e-col-filtered", "type": "edge", "parent": "1", "source": "col-slug", "target": "pieces-filtered", "label": "View all pieces" },
+        { "id": "e-pieces-product", "type": "edge", "parent": "1", "source": "pieces", "target": "product", "label": "คลิกสินค้า" },
+        { "id": "e-product-inquiry", "type": "edge", "parent": "1", "source": "product", "target": "inquiry", "label": "Request wholesale quote" }
+      ]
+    }
+  ]
+}

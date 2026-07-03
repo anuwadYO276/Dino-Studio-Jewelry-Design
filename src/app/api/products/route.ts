@@ -5,7 +5,7 @@ import { createProductSchema, productFilterSchema } from "@/lib/validators";
 import { successResponse, errorResponse } from "@/lib/api-response";
 import { Prisma } from "@prisma/client";
 
-// GET /api/products - List products with filters (public access)
+// GET /api/products - List products (public)
 export async function GET(request: NextRequest) {
   try {
 
@@ -16,7 +16,8 @@ export async function GET(request: NextRequest) {
       return errorResponse("VALIDATION_ERROR", "Invalid filter parameters", parsed.error.issues);
     }
 
-    const { category, color, size, material, status, search, sort, page, limit } = parsed.data;
+    const { category, collection, color, size, material, status, search, sort, page, limit } =
+      parsed.data;
     const skip = (page - 1) * limit;
 
     // Build where clause
@@ -27,6 +28,10 @@ export async function GET(request: NextRequest) {
     if (category) {
       const categories = category.split(",") as Prisma.ProductWhereInput["category"][];
       where.category = { in: categories as never };
+    }
+
+    if (collection) {
+      where.collection = { in: collection.split(",") };
     }
 
     if (status) {

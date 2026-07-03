@@ -4,7 +4,7 @@ import { requireRole } from "@/lib/auth-guard";
 import { updateProductSchema } from "@/lib/validators";
 import { successResponse, errorResponse } from "@/lib/api-response";
 
-// GET /api/products/:id - Get product detail (public access)
+// GET /api/products/:id - Get product detail (public)
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
