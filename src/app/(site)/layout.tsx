@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { SiteHeader } from "./_components/site-header";
 import { COLLECTIONS } from "@/lib/mock-catalogue-data";
+import { getCollectionTheme } from "@/lib/collection-theme";
 import { pageMetadata } from "@/lib/site-metadata";
 
 export const metadata: Metadata = pageMetadata(
@@ -31,17 +33,37 @@ export default function SiteLayout({
             </div>
             <div>
               <p className="section-eyebrow-sm">Collections</p>
-              <ul className="mt-4 space-y-2 text-sm text-neutral-600">
-                {COLLECTIONS.map((c) => (
-                  <li key={c.slug}>
-                    <Link
-                      href={`/collections/${c.slug}`}
-                      className="transition-colors hover:text-neutral-900"
-                    >
-                      {c.name}
-                    </Link>
-                  </li>
-                ))}
+              <ul className="mt-4 space-y-2.5">
+                {COLLECTIONS.map((c) => {
+                  const theme = getCollectionTheme(c.slug);
+                  return (
+                    <li key={c.slug}>
+                      <Link
+                        href={`/collections/${c.slug}`}
+                        className="footer-collection-link"
+                        style={
+                          {
+                            "--collection-accent": theme.accent,
+                          } as CSSProperties
+                        }
+                      >
+                        <span
+                          className="footer-collection-link__mark"
+                          aria-hidden
+                        />
+                        <span className="footer-collection-link__text">
+                          {c.name}
+                        </span>
+                        <span
+                          className="footer-collection-link__arrow"
+                          aria-hidden
+                        >
+                          →
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
             <div>
@@ -51,10 +73,10 @@ export default function SiteLayout({
                 beyond.
               </p>
               <a
-                href="mailto:wholesale@dinostudio.com"
+                href="mailto:silversand-bkk@hotmail.com"
                 className="mt-4 inline-block text-sm tracking-wide text-neutral-900 underline underline-offset-4 transition-opacity hover:opacity-60"
               >
-                wholesale@dinostudio.com
+                silversand-bkk@hotmail.com
               </a>
               <Link
                 href="/inquiry"

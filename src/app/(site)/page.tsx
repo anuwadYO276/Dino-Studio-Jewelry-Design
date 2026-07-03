@@ -29,7 +29,7 @@ export default function HomePage() {
     name: BRAND.name,
     description: BRAND.story,
     slogan: BRAND.keywords,
-    email: "wholesale@dinostudio.com",
+    email: "silversand-bkk@hotmail.com",
   };
 
   return (

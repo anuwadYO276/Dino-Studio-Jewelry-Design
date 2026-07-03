@@ -36,13 +36,13 @@ body {
     @apply font-[family-name:var(--font-display)] font-light tracking-normal text-neutral-900;
   }
 
-  /* Section labels — italic Cormorant, not ALL CAPS */
+  /* Section labels — italic Cormorant, not ALL CAPS (brief: small editorial, still readable) */
   .section-eyebrow {
-    @apply font-[family-name:var(--font-display)] text-sm font-light italic tracking-normal text-neutral-400;
+    @apply font-[family-name:var(--font-display)] text-xl font-light italic tracking-normal text-neutral-400;
   }
 
   .section-eyebrow-sm {
-    @apply font-[family-name:var(--font-display)] text-xs font-light italic tracking-normal text-neutral-400;
+    @apply font-[family-name:var(--font-display)] text-lg font-light italic tracking-normal text-neutral-400;
   }
 
   /* Nav — restrained uppercase for usability */
@@ -102,6 +102,63 @@ body {
   @media (prefers-reduced-motion: no-preference) {
     .reveal-on-scroll {
       animation: reveal-up 0.7s ease-out both;
+    }
+  }
+
+  .footer-collection-link {
+    @apply inline-flex items-center gap-2.5 py-0.5 text-sm text-neutral-600 outline-none;
+  }
+
+  .footer-collection-link__mark {
+    @apply h-px shrink-0 bg-[var(--collection-accent)];
+    width: 0;
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .footer-collection-link__text {
+    transition:
+      color 0.25s ease,
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .footer-collection-link__arrow {
+    @apply ml-0.5 text-[var(--collection-accent)] opacity-0;
+    transform: translateX(-4px);
+    transition:
+      opacity 0.25s ease,
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .footer-collection-link:hover .footer-collection-link__mark,
+  .footer-collection-link:focus-visible .footer-collection-link__mark {
+    width: 1rem;
+  }
+
+  .footer-collection-link:hover .footer-collection-link__text,
+  .footer-collection-link:focus-visible .footer-collection-link__text {
+    @apply text-[var(--collection-accent)];
+    transform: translateX(3px);
+  }
+
+  .footer-collection-link:hover .footer-collection-link__arrow,
+  .footer-collection-link:focus-visible .footer-collection-link__arrow {
+    @apply opacity-100;
+    transform: translateX(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer-collection-link__mark {
+      width: 0.75rem;
+      transition: none;
+    }
+
+    .footer-collection-link:hover .footer-collection-link__text,
+    .footer-collection-link:focus-visible .footer-collection-link__text {
+      transform: none;
+    }
+
+    .footer-collection-link__arrow {
+      @apply hidden;
     }
   }
 }

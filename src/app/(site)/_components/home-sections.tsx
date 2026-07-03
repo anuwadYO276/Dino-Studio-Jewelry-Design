@@ -22,9 +22,7 @@ export function CollectionIconStrip({
                 key={c.slug}
                 href={`/collections/${c.slug}`}
                 className="heading-display shrink-0 snap-start text-xl lowercase text-neutral-800 transition-colors hover:text-[var(--collection-accent)] md:text-2xl"
-                style={
-                  { "--collection-accent": theme.accent } as CSSProperties
-                }
+                style={{ "--collection-accent": theme.accent } as CSSProperties}
               >
                 {c.name.toLowerCase()}
               </Link>
@@ -97,9 +95,7 @@ export function HomeCinematicCollection({
         <p className="mt-3 max-w-md font-display text-base font-light italic text-white/90 md:text-lg">
           {collection.tagline}
         </p>
-        <span
-          className="text-link mt-6 inline-block text-sm text-white/80 underline-offset-4 group-hover:text-white"
-        >
+        <span className="text-link mt-6 inline-block text-sm text-white/80 underline-offset-4 group-hover:text-white">
           View collection →
         </span>
       </div>
@@ -173,10 +169,10 @@ export function ClientRelationsStrip() {
         </div>
         <div className="flex flex-col justify-center gap-4">
           <a
-            href="mailto:wholesale@dinostudio.com"
+            href="mailto:silversand-bkk@hotmail.com"
             className="text-sm tracking-wide text-white underline underline-offset-4 transition-opacity hover:opacity-70"
           >
-            wholesale@dinostudio.com
+            silversand-bkk@hotmail.com
           </a>
           <Link
             href="/inquiry"

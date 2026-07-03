@@ -11,7 +11,9 @@ export function SiteHeader() {
 
   useEffect(() => {
     if (!isHome) {
-      setScrolled(true);
+      setTimeout(() => {
+        setScrolled(true);
+      }, 100);
       return;
     }
 
