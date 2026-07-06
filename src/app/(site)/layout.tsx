@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import type { CSSProperties } from "react";
 import { SiteHeader } from "./_components/site-header";
 import { COLLECTIONS } from "@/lib/mock-catalogue-data";
-import { getCollectionTheme } from "@/lib/collection-theme";
 import { pageMetadata } from "@/lib/site-metadata";
 
 export const metadata: Metadata = pageMetadata(
@@ -34,18 +32,11 @@ export default function SiteLayout({
             <div>
               <p className="section-eyebrow-sm">Collections</p>
               <ul className="mt-4 space-y-2.5">
-                {COLLECTIONS.map((c) => {
-                  const theme = getCollectionTheme(c.slug);
-                  return (
+                {COLLECTIONS.map((c) => (
                     <li key={c.slug}>
                       <Link
                         href={`/collections/${c.slug}`}
                         className="footer-collection-link"
-                        style={
-                          {
-                            "--collection-accent": theme.accent,
-                          } as CSSProperties
-                        }
                       >
                         <span
                           className="footer-collection-link__mark"
@@ -62,8 +53,7 @@ export default function SiteLayout({
                         </span>
                       </Link>
                     </li>
-                  );
-                })}
+                  ))}
               </ul>
             </div>
             <div>

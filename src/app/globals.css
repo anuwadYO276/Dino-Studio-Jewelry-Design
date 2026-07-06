@@ -141,12 +141,32 @@ body {
     @apply text-[11px] tracking-[0.12em] uppercase text-neutral-400;
   }
 
+  .catalogue-field {
+    @apply w-full border-0 border-b border-neutral-200 bg-transparent px-0 py-2 text-sm text-neutral-700 outline-none transition-colors focus:border-neutral-900 sm:w-auto sm:min-w-[9rem];
+  }
+
+  .catalogue-field::placeholder {
+    @apply text-neutral-400;
+  }
+
+  .catalogue-grid {
+    @apply grid gap-0 border-t border-l border-neutral-200;
+  }
+
+  .catalogue-cell {
+    @apply border-r border-b border-neutral-200 bg-white;
+  }
+
   .page-shell {
     @apply mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24;
   }
 
   .page-shell-narrow {
     @apply mx-auto max-w-2xl px-6 py-16 lg:px-10 lg:py-24;
+  }
+
+  .collection-surface {
+    background-color: var(--collection-accent-muted);
   }
 
   .strip-scroll {
@@ -168,7 +188,7 @@ body {
   }
 
   .footer-collection-link__mark {
-    @apply h-px shrink-0 bg-[var(--collection-accent)];
+    @apply h-px shrink-0 bg-neutral-900;
     width: 0;
     transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -180,7 +200,7 @@ body {
   }
 
   .footer-collection-link__arrow {
-    @apply ml-0.5 text-[var(--collection-accent)] opacity-0;
+    @apply ml-0.5 text-neutral-900 opacity-0;
     transform: translateX(-4px);
     transition:
       opacity 0.25s ease,
@@ -194,7 +214,7 @@ body {
 
   .footer-collection-link:hover .footer-collection-link__text,
   .footer-collection-link:focus-visible .footer-collection-link__text {
-    @apply text-[var(--collection-accent)];
+    @apply text-neutral-900;
     transform: translateX(3px);
   }
 

@@ -131,7 +131,7 @@ export function CollectionFeaturedSection({
   const style = getFeaturedSectionStyle(theme.layoutProfile);
 
   return (
-    <section style={{ backgroundColor: theme.accentMuted }}>
+    <section className="collection-surface">
       <div className="mx-auto max-w-7xl px-6 pb-24 lg:px-10">
         <div
           className={`py-16 ${style.centered ? "text-center" : ""} ${
@@ -192,8 +192,7 @@ export function CollectionInquiryStrip({
       style={{ borderColor: `${theme.accent}40` }}
     >
       <div
-        className="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-16 md:flex-row md:items-center md:justify-between lg:px-10"
-        style={{ backgroundColor: theme.accentMuted }}
+        className="collection-surface mx-auto flex max-w-7xl flex-col gap-6 px-6 py-16 md:flex-row md:items-center md:justify-between lg:px-10"
       >
         <div>
           <p className="section-eyebrow">Wholesale</p>
@@ -366,8 +365,7 @@ function InsetHero({ collection, slug, theme, headingStyle }: SectionProps & { h
   return (
     <section className="px-6 pt-10 lg:px-10 lg:pt-14">
       <div
-        className="mx-auto max-w-6xl p-4 md:p-6 lg:p-8"
-        style={{ backgroundColor: theme.accentMuted }}
+        className="collection-surface mx-auto max-w-6xl p-4 md:p-6 lg:p-8"
       >
         <div className="relative aspect-[16/10] overflow-hidden">
           <Image
@@ -417,8 +415,7 @@ function SplitHero({
   );
   const copy = (
     <div
-      className="flex flex-col justify-end px-6 py-16 lg:px-12 lg:py-20"
-      style={{ backgroundColor: theme.accentMuted }}
+      className="collection-surface flex flex-col justify-end px-6 py-16 lg:px-12 lg:py-20"
     >
       <HeroIntro
         collection={collection}
@@ -512,7 +509,7 @@ function FramedEditorial({
 }) {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
-      <div className="p-4 md:p-8" style={{ backgroundColor: theme.accentMuted }}>
+      <div className="collection-surface p-4 md:p-8">
         <div className={`relative overflow-hidden ${wide ? "aspect-[21/9]" : "aspect-[4/3]"}`}>
           <Image
             src={collection.editorialImage}
@@ -677,7 +674,7 @@ function HeritageEditorial({
         />
         <div className="absolute inset-0" style={{ backgroundColor: theme.editorialOverlay }} />
       </div>
-      <div style={{ backgroundColor: theme.accentMuted }}>
+      <div className="collection-surface">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-2 lg:px-10">
           <div>
             <p className="section-eyebrow not-italic text-neutral-600">The collection</p>

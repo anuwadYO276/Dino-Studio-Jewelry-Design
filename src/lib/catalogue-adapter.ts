@@ -38,6 +38,7 @@ export function variantLabel(variant: ApiVariant) {
 
 /** Card view model for product grids */
 export function toProductCard(product: ApiProduct) {
+  const sorted = [...product.images].sort((a, b) => a.sortOrder - b.sortOrder);
   const primary = getPrimaryImage(product.images);
   const minPrice = getMinPrice(product.variants);
   const material = product.variants[0]?.material ?? null;
@@ -47,7 +48,7 @@ export function toProductCard(product: ApiProduct) {
     name: product.name,
     category: product.category,
     collection: product.collection,
-    imageUrl: primary?.url ?? null,
+    imageUrls: sorted.map((img) => img.url),
     imageAlt: primary?.altText ?? product.name,
     material,
     priceFrom: minPrice,

@@ -33,13 +33,28 @@ export const BRAND = {
   keywords: "Refined Simplicity, Timeless Elegance",
   signature:
     "Meticulously finished with a sophisticated sandblasted texture, the sterling silver reveals a soft, radiant shimmer that accentuates the purity and brilliance of the precious metal. Designed to embody quiet luxury, each piece offers an elegant statement of timeless refinement.",
+  /** Home — one line; full story stays in `story` for SEO / about */
+  homeHeroLine: "Silent stories in sterling silver",
   /** MOCK: cover copy for homepage — European / Australian collector angle */
   coverNarrative:
     "For creative buyers across Europe and Australia — silent stories in sterling silver, made to be lived with and collected.",
-  /** MOCK: sandblast texture macro until product photography */
-  signatureImage:
-    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80",
+  /** MOCK: brand story editorial until atelier photography */
+  storyImage:
+    "https://lnjewelryfactory.com/wp-content/uploads/2018/04/adult-artisan-black-and-white-848205.jpg",
 } as const;
+
+/** Brief: catalogue cover order — home editorial trilogy */
+export const HOME_COVER_SLUGS = [
+  "botanical-whispers",
+  "fallen-petals",
+  "wild-bloom",
+] as const;
+
+export const BRAND_COLLECTION_THEME =
+  "Nature · Memory · Imperfection · Soul" as const;
+
+export const BRAND_MATERIALS =
+  "Sterling silver · Gold plated · Rose gold plated · Black rhodium" as const;
 
 export const CATEGORY_LINKS = [
   { value: "ring", label: "Ring" },
@@ -58,9 +73,9 @@ export const COLLECTIONS: ShowcaseCollection[] = [
     tagline: "Silent stories carried by petals and wind",
     mood: "Quiet luxury · Silver florals · European garden",
     heroImage: "/collections/botanical-whispers-hero.png",
-    editorialImage: "/collections/botanical-whispers-editorial.png",
+    editorialImage: "https://www.lubyma.com/cdn/shop/files/IMG_0217.jpg?v=1752810073&width=1946",
     editorialImage2:
-      "https://images.unsplash.com/photo-1588186325868-bd2f86b05f73?w=1200&q=80",
+      "https://www.lubyma.com/cdn/shop/files/IMG_0217.jpg?v=1752810073&width=1946",
     isFeatured: true,
     featuredOrder: 1,
   },
@@ -70,9 +85,9 @@ export const COLLECTIONS: ShowcaseCollection[] = [
     tagline: "Preserving fleeting beauty in precious metal",
     mood: "Romantic · Fragile · Poetic",
     heroImage:
-      "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=1600&q=80",
+      "https://chairish-prod.freetls.fastly.net/image/product/master/819e0465-34c8-497f-ae0e-fb72075aa5f9/vintage-miao-tribal-silver-dragon-earrings-asian-tribal-jewelry-a-pair-3029",
     editorialImage:
-      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=1200&q=80",
+      "https://chairish-prod.freetls.fastly.net/image/product/master/819e0465-34c8-497f-ae0e-fb72075aa5f9/vintage-miao-tribal-silver-dragon-earrings-asian-tribal-jewelry-a-pair-3029",
     isFeatured: true,
     featuredOrder: 2,
   },
@@ -82,9 +97,9 @@ export const COLLECTIONS: ShowcaseCollection[] = [
     tagline: "Beauty in its untamed form",
     mood: "Organic · Raw · Expressive",
     heroImage:
-      "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=1600&q=80",
+      "https://quirksmith.com/cdn/shop/files/floral-drop-earrings-quirksmith-897106.jpg?v=1723637886&width=2048",
     editorialImage:
-      "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1200&q=80",
+      "https://quirksmith.com/cdn/shop/files/floral-drop-earrings-quirksmith-897106.jpg?v=1723637886&width=2048",
     isFeatured: true,
     featuredOrder: 3,
   },

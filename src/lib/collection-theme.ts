@@ -30,6 +30,32 @@ export interface TypeAccent {
   letterSpacing?: string;
 }
 
+export type HomeCtaStyle = "link" | "button" | "minimal";
+
+/** Light panel tint — derived from accent unless overridden (e.g. white accent). */
+function deriveAccentMuted(accent: string, mix = 0.12): string {
+  const hex = accent.replace("#", "");
+  const full =
+    hex.length === 3
+      ? hex
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : hex;
+  const n = parseInt(full, 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  const t = 1 - mix;
+  const toHex = (v: number) =>
+    Math.round(v).toString(16).padStart(2, "0");
+  return `#${toHex(r * mix + 255 * t)}${toHex(g * mix + 255 * t)}${toHex(b * mix + 255 * t)}`;
+}
+
+type CollectionThemeConfig = Omit<CollectionTheme, "accentMuted"> & {
+  accentMuted?: string;
+};
+
 export interface CollectionTheme {
   accent: string;
   accentMuted: string;
@@ -40,12 +66,14 @@ export interface CollectionTheme {
   moodCopy: string;
   motif: CollectionMotif;
   typeAccent: TypeAccent;
+  /** Home editorial block — optional per collection */
+  homeCta?: string;
+  homeCtaStyle?: HomeCtaStyle;
 }
 
-const THEMES: Record<string, CollectionTheme> = {
+const THEMES: Record<string, CollectionThemeConfig> = {
   "botanical-whispers": {
-    accent: "#5a6b52",
-    accentMuted: "#eef1eb",
+    accent: "#7d8f72",
     heroGradient:
       "linear-gradient(to top, rgba(18,24,16,0.82) 0%, rgba(90,107,82,0.28) 50%, transparent 100%)",
     editorialOverlay: "rgba(125, 143, 114, 0.1)",
@@ -54,10 +82,11 @@ const THEMES: Record<string, CollectionTheme> = {
       "Sterling silver shaped like wind-lifted petals — anemone, wild rose, and meadow bloom cast in quiet lines. Hand-finished with sandblasted shimmer; each piece holds a story too soft to speak aloud.",
     motif: "petal",
     typeAccent: { weight: 300, italic: true },
+    homeCta: "Botanical Whispers →",
+    homeCtaStyle: "link",
   },
   "fallen-petals": {
     accent: "#9a6b65",
-    accentMuted: "#f5ebe9",
     heroGradient:
       "linear-gradient(to top, rgba(45,28,28,0.8) 0%, rgba(184, 144, 138, 0.25) 50%, transparent 100%)",
     editorialOverlay: "rgba(184, 144, 138, 0.15)",
@@ -66,10 +95,11 @@ const THEMES: Record<string, CollectionTheme> = {
       "Beauty caught at the moment of falling. Romantic, fragile forms preserved in sterling — wearable memento of what fades.",
     motif: "petal",
     typeAccent: { weight: 300, italic: true },
+    homeCta: "Fallen Petals →",
+    homeCtaStyle: "link",
   },
   "wild-bloom": {
     accent: "#6b5a45",
-    accentMuted: "#efe9e0",
     heroGradient:
       "linear-gradient(to top, rgba(30,22,15,0.88) 0%, rgba(107, 91, 79, 0.3) 55%, transparent 100%)",
     editorialOverlay: "rgba(139, 115, 85, 0.18)",
@@ -78,10 +108,11 @@ const THEMES: Record<string, CollectionTheme> = {
       "Untamed lines drawn from nature's raw expression. No symmetry forced — only the honesty of organic growth cast in metal.",
     motif: "bloom",
     typeAccent: { weight: 300, letterSpacing: "0.04em" },
+    homeCta: "Explore →",
+    homeCtaStyle: "minimal",
   },
   "primitive-gold": {
     accent: "#a88850",
-    accentMuted: "#f3ead8",
     heroGradient:
       "linear-gradient(to top, rgba(25,20,12,0.9) 0%, rgba(196, 165, 116, 0.22) 50%, transparent 100%)",
     editorialOverlay: "rgba(196, 165, 116, 0.14)",
@@ -93,7 +124,6 @@ const THEMES: Record<string, CollectionTheme> = {
   },
   "sacred-fragments": {
     accent: "#6b6560",
-    accentMuted: "#ebe9e7",
     heroGradient:
       "linear-gradient(to top, rgba(28,28,30,0.88) 0%, rgba(140, 133, 128, 0.28) 48%, transparent 100%)",
     editorialOverlay: "rgba(140, 133, 128, 0.16)",
@@ -105,7 +135,6 @@ const THEMES: Record<string, CollectionTheme> = {
   },
   "golden-relics": {
     accent: "#9a7548",
-    accentMuted: "#f5efe6",
     heroGradient:
       "linear-gradient(to top, rgba(35,28,18,0.87) 0%, rgba(184, 149, 107, 0.26) 52%, transparent 100%)",
     editorialOverlay: "rgba(184, 149, 107, 0.14)",
@@ -117,7 +146,6 @@ const THEMES: Record<string, CollectionTheme> = {
   },
   "organic-architecture": {
     accent: "#4f5f54",
-    accentMuted: "#e4e9e5",
     heroGradient:
       "linear-gradient(to top, rgba(18,24,20,0.86) 0%, rgba(110, 127, 114, 0.3) 50%, transparent 100%)",
     editorialOverlay: "rgba(110, 127, 114, 0.13)",
@@ -129,7 +157,6 @@ const THEMES: Record<string, CollectionTheme> = {
   },
   "woven-by-nature": {
     accent: "#6b6255",
-    accentMuted: "#ece8e2",
     heroGradient:
       "linear-gradient(to top, rgba(32,28,24,0.85) 0%, rgba(154, 143, 126, 0.24) 55%, transparent 100%)",
     editorialOverlay: "rgba(154, 143, 126, 0.15)",
@@ -141,9 +168,8 @@ const THEMES: Record<string, CollectionTheme> = {
   },
 };
 
-const DEFAULT_THEME: CollectionTheme = {
+const DEFAULT_THEME: CollectionThemeConfig = {
   accent: "#737373",
-  accentMuted: "#f5f5f5",
   heroGradient:
     "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)",
   editorialOverlay: "rgba(0,0,0,0.08)",
@@ -154,7 +180,11 @@ const DEFAULT_THEME: CollectionTheme = {
 };
 
 export function getCollectionTheme(slug: string): CollectionTheme {
-  return THEMES[slug] ?? DEFAULT_THEME;
+  const theme = THEMES[slug] ?? DEFAULT_THEME;
+  return {
+    ...theme,
+    accentMuted: theme.accentMuted ?? deriveAccentMuted(theme.accent),
+  };
 }
 
 /** Light text only on dark hero overlays — not on inset/light panels */
@@ -172,6 +202,16 @@ export function collectionTypeStyle(theme: CollectionTheme): CSSProperties {
     fontWeight: theme.typeAccent.weight,
     fontStyle: theme.typeAccent.italic ? "italic" : "normal",
     letterSpacing: theme.typeAccent.letterSpacing,
+  };
+}
+
+export function homeCollectionCta(
+  theme: CollectionTheme,
+  collection: { name: string }
+): { label: string; style: HomeCtaStyle } {
+  return {
+    label: theme.homeCta ?? `${collection.name} →`,
+    style: theme.homeCtaStyle ?? "link",
   };
 }
 

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
-import { ClientRelationsStrip } from "../_components/home-sections";
 import { InquiryForm } from "../_components/inquiry-form";
 import { pageMetadata } from "@/lib/site-metadata";
 
@@ -34,7 +33,6 @@ export default function InquiryPage() {
           </Suspense>
         </div>
       </section>
-      <ClientRelationsStrip />
     </>
   );
 }

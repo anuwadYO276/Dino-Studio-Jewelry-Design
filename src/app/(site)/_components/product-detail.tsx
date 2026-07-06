@@ -18,6 +18,7 @@ import {
 import { BRAND, COLLECTIONS, type ShowcaseCollection } from "@/lib/mock-catalogue-data";
 import { getCollectionTheme } from "@/lib/collection-theme";
 import { CollectionInquiryStrip } from "./collection-sections";
+import { ProductGallery } from "./product-gallery";
 
 // MOCK: slug lookup by collection name — until API has collection slugs
 const COLLECTIONS_BY_NAME = new Map(
@@ -88,7 +89,7 @@ export function ProductDetail({ productId }: Props) {
     return (
       <div className="mx-auto max-w-7xl animate-pulse px-6 py-16 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-2">
-          <div className="aspect-[3/4] bg-neutral-100" />
+          <div className="aspect-square bg-neutral-50" />
           <div className="space-y-4">
             <div className="h-8 w-2/3 bg-neutral-100" />
             <div className="h-20 bg-neutral-50" />
@@ -109,11 +110,9 @@ export function ProductDetail({ productId }: Props) {
     );
   }
 
-  const images = product.images;
-  const activeImage = images[selectedImage] ?? getPrimaryImage(images);
+  const images = [...product.images].sort((a, b) => a.sortOrder - b.sortOrder);
   const theme = collection ? getCollectionTheme(collection.slug) : null;
   const accent = theme?.accent ?? "#171717";
-  const thumbSelected = selectedImage;
   const variantSelected = (id: string) => selectedVariant?.id === id;
 
   return (
@@ -143,51 +142,12 @@ export function ProductDetail({ productId }: Props) {
 
       <div className="mx-auto grid max-w-7xl gap-12 px-6 pb-24 lg:grid-cols-2 lg:gap-16 lg:px-10">
         <div>
-          <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100">
-            {activeImage ? (
-              <Image
-                key={activeImage.id}
-                src={activeImage.url}
-                alt={activeImage.altText ?? product.name}
-                fill
-                priority
-                sizes="(max-width:1024px) 100vw, 50vw"
-                className="object-cover"
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center text-neutral-300">
-                No image
-              </div>
-            )}
-          </div>
-          {/* MOCK: no image type field (product/lifestyle/editorial) — show all images as thumbnails */}
-          {images.length > 1 && (
-            <div className="mt-4 grid grid-cols-4 gap-2">
-              {images.map((img, index) => (
-                <button
-                  key={img.id}
-                  type="button"
-                  onClick={() => setSelectedImage(index)}
-                  className={`relative aspect-square overflow-hidden border-2 ${
-                    thumbSelected === index ? "" : "border-transparent"
-                  }`}
-                  style={
-                    thumbSelected === index
-                      ? { borderColor: accent }
-                      : undefined
-                  }
-                >
-                  <Image
-                    src={img.url}
-                    alt={img.altText ?? `${product.name} ${index + 1}`}
-                    fill
-                    sizes="100px"
-                    className="object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
+          <ProductGallery
+            images={images}
+            productName={product.name}
+            selectedIndex={selectedImage}
+            onSelectIndex={setSelectedImage}
+          />
         </div>
 
         <div className="lg:pt-8">
@@ -315,10 +275,7 @@ export function ProductDetail({ productId }: Props) {
 
       {related.length > 0 && (
         <section
-          className="border-t border-neutral-100"
-          style={
-            theme ? { backgroundColor: theme.accentMuted } : { backgroundColor: "#fafafa" }
-          }
+          className={`border-t border-neutral-100 ${theme ? "collection-surface" : "bg-neutral-50"}`}
         >
           <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
             <h2 className="heading-display text-2xl">
