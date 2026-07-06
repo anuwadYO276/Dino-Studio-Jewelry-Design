@@ -4,18 +4,17 @@ import { HomeFeaturedPieces } from "./_components/home-featured-pieces";
 import { HomeCoverTrilogy } from "./_components/home-sections";
 import {
   BRAND,
-  COLLECTIONS,
   HOME_COVER_SLUGS,
-  getFeaturedCollections,
+  getCollection,
 } from "@/lib/mock-catalogue-data";
 import { getCollectionTheme } from "@/lib/collection-theme";
 
 export default function HomePage() {
-  const cover = getFeaturedCollections()[0];
+  const coverCollections = HOME_COVER_SLUGS.map(getCollection).filter(
+    (c): c is NonNullable<typeof c> => c != null,
+  );
+  const cover = coverCollections[0];
   const coverTheme = getCollectionTheme(cover.slug);
-  const coverCollections = HOME_COVER_SLUGS.map((slug) =>
-    COLLECTIONS.find((c) => c.slug === slug),
-  ).filter((c): c is NonNullable<typeof c> => c != null);
 
   const jsonLd = {
     "@context": "https://schema.org",

@@ -2,39 +2,13 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CollectionMotif } from "./collection-motif";
-import {
-  CATEGORY_LINKS,
-  type ShowcaseCollection,
-} from "@/lib/mock-catalogue-data";
+import type { ShowcaseCollection } from "@/lib/mock-catalogue-data";
 import {
   collectionTypeStyle,
   getCollectionTheme,
-  homeCollectionCta,
   type CollectionTheme,
   type HomeCtaStyle,
 } from "@/lib/collection-theme";
-
-export function CategoryStrip() {
-  return (
-    <section className="border-b border-neutral-100 py-8">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <p className="section-eyebrow mb-5 text-center">Browse by form</p>
-        <div className="strip-scroll flex snap-x snap-mandatory justify-start gap-x-8 overflow-x-auto pb-1 md:justify-center md:overflow-visible">
-          {CATEGORY_LINKS.map((cat) => (
-            <Link
-              key={cat.value}
-              href={`/pieces?category=${cat.value}`}
-              className="strip-category-link nav-label"
-            >
-              {cat.label}
-              <span className="strip-category-link__mark" aria-hidden />
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export function HomeCoverTrilogy({
   collections,
@@ -61,7 +35,10 @@ function HomeEditorialCollection({
   const theme = getCollectionTheme(collection.slug);
   const href = `/collections/${collection.slug}`;
   const headingStyle = collectionTypeStyle(theme);
-  const cta = homeCollectionCta(theme, collection);
+  const cta = {
+    label: theme.homeCta ?? `${collection.name} →`,
+    style: theme.homeCtaStyle ?? ("link" as const),
+  };
 
   switch (theme.layoutProfile) {
     case "petals-inset":
@@ -100,25 +77,12 @@ function HomeEditorialCollection({
 function HomeCollectionCta({
   label,
   style,
-  theme,
   onDark = true,
 }: {
   label: string;
   style: HomeCtaStyle;
-  theme: CollectionTheme;
   onDark?: boolean;
 }) {
-  if (style === "button") {
-    return (
-      <span
-        className="btn-catalogue btn-catalogue-outline mt-8 inline-block transition-colors group-hover:bg-neutral-900 group-hover:text-white"
-        style={{ borderColor: theme.accent, color: theme.accent }}
-      >
-        {label}
-      </span>
-    );
-  }
-
   if (style === "minimal") {
     return (
       <span
@@ -195,7 +159,7 @@ function HomeBotanicalLead({
         >
           {collection.tagline}
         </p>
-        <HomeCollectionCta label={cta.label} style={cta.style} theme={theme} />
+        <HomeCollectionCta label={cta.label} style={cta.style} />
       </div>
     </Link>
   );
@@ -240,12 +204,7 @@ function HomePetalsInset({
         >
           {collection.tagline}
         </p>
-        <HomeCollectionCta
-          label={cta.label}
-          style={cta.style}
-          theme={theme}
-          onDark={false}
-        />
+        <HomeCollectionCta label={cta.label} style={cta.style} onDark={false} />
       </div>
 
       <div className="relative min-h-[75vw] overflow-hidden sm:min-h-[420px] lg:min-h-[72vh]">
@@ -305,7 +264,7 @@ function HomeBloomCinematic({
         >
           {collection.tagline}
         </p>
-        <HomeCollectionCta label={cta.label} style={cta.style} theme={theme} />
+        <HomeCollectionCta label={cta.label} style={cta.style} />
       </div>
     </Link>
   );

@@ -169,14 +169,6 @@ body {
     background-color: var(--collection-accent-muted);
   }
 
-  .strip-scroll {
-    scrollbar-width: none;
-  }
-
-  .strip-scroll::-webkit-scrollbar {
-    display: none;
-  }
-
   @media (prefers-reduced-motion: no-preference) {
     .reveal-on-scroll {
       animation: reveal-up 0.7s ease-out both;
@@ -240,79 +232,6 @@ body {
     }
   }
 
-  .strip-collection-link {
-    @apply relative inline-block shrink-0 snap-start pb-1 text-neutral-800 outline-none;
-    transition: color 0.25s ease;
-  }
-
-  .strip-collection-link__mark {
-    @apply absolute bottom-0 left-0 h-px bg-[var(--collection-accent)];
-    width: 0;
-    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .strip-collection-link:hover,
-  .strip-collection-link:focus-visible {
-    @apply text-[var(--collection-accent)];
-  }
-
-  .strip-collection-link:hover .strip-collection-link__mark,
-  .strip-collection-link:focus-visible .strip-collection-link__mark {
-    width: 100%;
-  }
-
-  .strip-category-link {
-    @apply relative inline-block shrink-0 snap-start pb-1 text-neutral-500 outline-none;
-    transition:
-      color 0.25s ease,
-      letter-spacing 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .strip-category-link__mark {
-    @apply absolute bottom-0 left-0 h-px w-full origin-center bg-neutral-900;
-    transform: scaleX(0);
-    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .strip-category-link:hover,
-  .strip-category-link:focus-visible {
-    @apply text-neutral-900;
-    letter-spacing: 0.16em;
-  }
-
-  .strip-category-link:hover .strip-category-link__mark,
-  .strip-category-link:focus-visible .strip-category-link__mark {
-    transform: scaleX(1);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .strip-collection-link__mark {
-      width: 100%;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .strip-collection-link:hover .strip-collection-link__mark,
-    .strip-collection-link:focus-visible .strip-collection-link__mark {
-      opacity: 1;
-    }
-
-    .strip-category-link:hover,
-    .strip-category-link:focus-visible {
-      letter-spacing: 0.12em;
-    }
-
-    .strip-category-link__mark {
-      transform: scaleX(1);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .strip-category-link:hover .strip-category-link__mark,
-    .strip-category-link:focus-visible .strip-category-link__mark {
-      opacity: 1;
-    }
-  }
 }
 
 @keyframes reveal-up {

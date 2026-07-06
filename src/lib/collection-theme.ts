@@ -30,31 +30,10 @@ export interface TypeAccent {
   letterSpacing?: string;
 }
 
-export type HomeCtaStyle = "link" | "button" | "minimal";
+export type HomeCtaStyle = "link" | "minimal";
 
-/** Light panel tint — derived from accent unless overridden (e.g. white accent). */
-function deriveAccentMuted(accent: string, mix = 0.12): string {
-  const hex = accent.replace("#", "");
-  const full =
-    hex.length === 3
-      ? hex
-          .split("")
-          .map((c) => c + c)
-          .join("")
-      : hex;
-  const n = parseInt(full, 16);
-  const r = (n >> 16) & 255;
-  const g = (n >> 8) & 255;
-  const b = n & 255;
-  const t = 1 - mix;
-  const toHex = (v: number) =>
-    Math.round(v).toString(16).padStart(2, "0");
-  return `#${toHex(r * mix + 255 * t)}${toHex(g * mix + 255 * t)}${toHex(b * mix + 255 * t)}`;
-}
-
-type CollectionThemeConfig = Omit<CollectionTheme, "accentMuted"> & {
-  accentMuted?: string;
-};
+/** Theme without the derived `accentMuted` — computed in getCollectionTheme */
+type CollectionThemeConfig = Omit<CollectionTheme, "accentMuted">;
 
 export interface CollectionTheme {
   accent: string;
@@ -183,7 +162,8 @@ export function getCollectionTheme(slug: string): CollectionTheme {
   const theme = THEMES[slug] ?? DEFAULT_THEME;
   return {
     ...theme,
-    accentMuted: theme.accentMuted ?? deriveAccentMuted(theme.accent),
+    // Light panel tint — CSS does the mixing, no hex math needed
+    accentMuted: `color-mix(in srgb, ${theme.accent} 12%, white)`,
   };
 }
 
@@ -205,16 +185,6 @@ export function collectionTypeStyle(theme: CollectionTheme): CSSProperties {
   };
 }
 
-export function homeCollectionCta(
-  theme: CollectionTheme,
-  collection: { name: string }
-): { label: string; style: HomeCtaStyle } {
-  return {
-    label: theme.homeCta ?? `${collection.name} →`,
-    style: theme.homeCtaStyle ?? "link",
-  };
-}
-
 export interface FeaturedSectionStyle {
   gridClass: string;
   limit: number;
@@ -224,65 +194,53 @@ export interface FeaturedSectionStyle {
   motifOpacity: number;
 }
 
+const FEATURED_DEFAULT: FeaturedSectionStyle = {
+  gridClass: "grid-cols-2 md:grid-cols-4",
+  limit: 4,
+  centered: false,
+  borderAccent: "none",
+  sectionLabel: "Featured pieces",
+  motifOpacity: 0.22,
+};
+
+/** Only what differs from FEATURED_DEFAULT per layout */
+const FEATURED_OVERRIDES: Partial<
+  Record<LayoutProfile, Partial<FeaturedSectionStyle>>
+> = {
+  "woven-geometry": {
+    gridClass: "grid-cols-2 md:grid-cols-3",
+    limit: 3,
+    sectionLabel: "Selected pieces",
+    motifOpacity: 0.28,
+  },
+  "fragments-collage": {
+    gridClass: "grid-cols-2 md:grid-cols-3",
+    limit: 3,
+    sectionLabel: "Selected pieces",
+    motifOpacity: 0.28,
+  },
+  "gold-tribal-center": {
+    gridClass: "grid-cols-2 md:grid-cols-3",
+    limit: 3,
+    centered: true,
+    borderAccent: "top",
+    motifOpacity: 0.25,
+  },
+  "relics-heritage": {
+    gridClass: "grid-cols-2 md:grid-cols-3",
+    limit: 3,
+    centered: true,
+    borderAccent: "top",
+    sectionLabel: "Selected relics",
+    motifOpacity: 0.25,
+  },
+  "architecture-structure": { borderAccent: "left" },
+  "petals-inset": { motifOpacity: 0.24 },
+  "bloom-cinematic": { motifOpacity: 0.24 },
+};
+
 export function getFeaturedSectionStyle(
   profile: LayoutProfile
 ): FeaturedSectionStyle {
-  switch (profile) {
-    case "woven-geometry":
-    case "fragments-collage":
-      return {
-        gridClass: "grid-cols-2 md:grid-cols-3",
-        limit: 3,
-        centered: false,
-        borderAccent: "none",
-        sectionLabel: "Selected pieces",
-        motifOpacity: 0.28,
-      };
-    case "gold-tribal-center":
-      return {
-        gridClass: "grid-cols-2 md:grid-cols-3",
-        limit: 3,
-        centered: true,
-        borderAccent: "top",
-        sectionLabel: "Featured pieces",
-        motifOpacity: 0.25,
-      };
-    case "relics-heritage":
-      return {
-        gridClass: "grid-cols-2 md:grid-cols-3",
-        limit: 3,
-        centered: true,
-        borderAccent: "top",
-        sectionLabel: "Selected relics",
-        motifOpacity: 0.25,
-      };
-    case "architecture-structure":
-      return {
-        gridClass: "grid-cols-2 md:grid-cols-4",
-        limit: 4,
-        centered: false,
-        borderAccent: "left",
-        sectionLabel: "Featured pieces",
-        motifOpacity: 0.22,
-      };
-    case "petals-inset":
-    case "bloom-cinematic":
-      return {
-        gridClass: "grid-cols-2 md:grid-cols-4",
-        limit: 4,
-        centered: false,
-        borderAccent: "none",
-        sectionLabel: "Featured pieces",
-        motifOpacity: 0.24,
-      };
-    default:
-      return {
-        gridClass: "grid-cols-2 md:grid-cols-4",
-        limit: 4,
-        centered: false,
-        borderAccent: "none",
-        sectionLabel: "Featured pieces",
-        motifOpacity: 0.22,
-      };
-  }
+  return { ...FEATURED_DEFAULT, ...FEATURED_OVERRIDES[profile] };
 }
