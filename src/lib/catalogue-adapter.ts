@@ -10,6 +10,57 @@ export const API_CATEGORY_LABELS: Record<string, string> = {
   set: "Set",
 };
 
+/** Prisma row → client ApiProduct (Decimal price → string, same as API JSON). */
+export function toApiProduct(row: {
+  id: string;
+  name: string;
+  description: string | null;
+  category: string;
+  collection: string | null;
+  status: string;
+  variants: Array<{
+    id: string;
+    sku: string;
+    color: string | null;
+    size: string | null;
+    material: string | null;
+    price: { toString(): string } | string | number;
+    minOrder: number;
+  }>;
+  images: Array<{
+    id: string;
+    url: string;
+    altText: string | null;
+    isPrimary: boolean;
+    sortOrder: number;
+  }>;
+}): ApiProduct {
+  return {
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    category: row.category,
+    collection: row.collection,
+    status: row.status,
+    variants: row.variants.map((v) => ({
+      id: v.id,
+      sku: v.sku,
+      color: v.color,
+      size: v.size,
+      material: v.material,
+      price: String(v.price),
+      minOrder: v.minOrder,
+    })),
+    images: row.images.map((img) => ({
+      id: img.id,
+      url: img.url,
+      altText: img.altText,
+      isPrimary: img.isPrimary,
+      sortOrder: img.sortOrder,
+    })),
+  };
+}
+
 export function getPrimaryImage(images: ApiProductImage[]) {
   return images.find((img) => img.isPrimary) ?? images[0] ?? null;
 }
@@ -52,6 +103,5 @@ export function toProductCard(product: ApiProduct) {
     imageAlt: primary?.altText ?? product.name,
     material,
     priceFrom: minPrice,
-    code: product.variants[0]?.sku ?? null,
   };
 }

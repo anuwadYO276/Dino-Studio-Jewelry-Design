@@ -10,67 +10,12 @@ import {
 } from "react";
 import Image from "next/image";
 import type { ApiProductImage } from "@/lib/types/product";
+import { ChevronIcon, CloseIcon, ExpandIcon } from "./gallery-icons";
 
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 4;
 const SLIDE_COMMIT = 0.12;
 const DRAG_CLICK_THRESHOLD = 8;
-
-function ChevronIcon({
-  direction,
-  size = "md",
-}: {
-  direction: "left" | "right";
-  size?: "sm" | "md";
-}) {
-  const cls = size === "sm" ? "h-3.5 w-3.5" : "h-5 w-5";
-  return (
-    <svg
-      aria-hidden
-      className={cls}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      {direction === "left" ? (
-        <path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
-      ) : (
-        <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-      )}
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg
-      aria-hidden
-      className="h-5 w-5"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function ExpandIcon() {
-  return (
-    <svg
-      aria-hidden
-      className="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      <path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6" strokeLinecap="round" />
-    </svg>
-  );
-}
 
 function touchDistance(touches: { clientX: number; clientY: number }[]) {
   if (touches.length < 2) return 0;
@@ -232,7 +177,7 @@ export function ProductGallery({
                 disabled={selectedIndex === 0}
                 className="absolute top-1/2 left-3 z-10 -translate-y-1/2 cursor-pointer p-1 text-neutral-400 opacity-70 transition-opacity hover:text-neutral-900 hover:opacity-100 disabled:cursor-default disabled:opacity-20"
               >
-                <ChevronIcon direction="left" size="sm" />
+                <ChevronIcon direction="left" className="h-3.5 w-3.5" />
               </button>
               <button
                 type="button"
@@ -243,7 +188,7 @@ export function ProductGallery({
                 disabled={selectedIndex === images.length - 1}
                 className="absolute top-1/2 right-3 z-10 -translate-y-1/2 cursor-pointer p-1 text-neutral-400 opacity-70 transition-opacity hover:text-neutral-900 hover:opacity-100 disabled:cursor-default disabled:opacity-20"
               >
-                <ChevronIcon direction="right" size="sm" />
+                <ChevronIcon direction="right" className="h-3.5 w-3.5" />
               </button>
             </>
           ) : null}
@@ -505,7 +450,7 @@ function ProductImageLightbox({
               disabled={index === 0}
               className="absolute top-1/2 left-3 z-20 -translate-y-1/2 p-1 text-neutral-400 opacity-70 hover:text-neutral-900 hover:opacity-100 disabled:opacity-20"
             >
-              <ChevronIcon direction="left" size="sm" />
+              <ChevronIcon direction="left" className="h-3.5 w-3.5" />
             </button>
             <button
               type="button"
@@ -514,7 +459,7 @@ function ProductImageLightbox({
               disabled={index === images.length - 1}
               className="absolute top-1/2 right-3 z-20 -translate-y-1/2 p-1 text-neutral-400 opacity-70 hover:text-neutral-900 hover:opacity-100 disabled:opacity-20"
             >
-              <ChevronIcon direction="right" size="sm" />
+              <ChevronIcon direction="right" className="h-3.5 w-3.5" />
             </button>
           </>
         ) : null}

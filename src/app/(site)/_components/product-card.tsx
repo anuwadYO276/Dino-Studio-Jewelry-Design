@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toProductCard } from "@/lib/catalogue-adapter";
+import { ChevronIcon } from "./gallery-icons";
 
 export type ProductCardData = ReturnType<typeof toProductCard>;
 
@@ -13,25 +14,6 @@ export const CATALOGUE_GRID_CLASS =
 /** /pieces catalogue — 4 columns on large screens */
 export const PIECES_GRID_CLASS =
   "catalogue-grid grid-cols-2 lg:grid-cols-4";
-
-function ChevronIcon({ direction }: { direction: "left" | "right" }) {
-  return (
-    <svg
-      aria-hidden
-      className="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      {direction === "left" ? (
-        <path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
-      ) : (
-        <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-      )}
-    </svg>
-  );
-}
 
 function ProductCardGallery({
   productId,

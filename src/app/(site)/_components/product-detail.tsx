@@ -1,105 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import type {
-  ApiProduct,
-  ApiProductResponse,
-  ApiProductsResponse,
-  ApiVariant,
-} from "@/lib/types/product";
+import type { ApiProduct, ApiVariant } from "@/lib/types/product";
 import {
   formatCategory,
   getPrimaryImage,
   variantLabel,
 } from "@/lib/catalogue-adapter";
-import { BRAND, COLLECTIONS, type ShowcaseCollection } from "@/lib/mock-catalogue-data";
+import { BRAND, COLLECTIONS } from "@/lib/mock-catalogue-data";
 import { getCollectionTheme } from "@/lib/collection-theme";
 import { CollectionInquiryStrip } from "./collection-sections";
 import { ProductGallery } from "./product-gallery";
 
 // MOCK: slug lookup by collection name — until API has collection slugs
 const COLLECTIONS_BY_NAME = new Map(
-  COLLECTIONS.map((c) => [c.name, c] as const)
+  COLLECTIONS.map((c) => [c.name, c] as const),
 );
 
 interface Props {
-  productId: string;
+  product: ApiProduct | null;
+  related: ApiProduct[];
 }
 
-export function ProductDetail({ productId }: Props) {
-  const [product, setProduct] = useState<ApiProduct | null>(null);
-  const [related, setRelated] = useState<ApiProduct[]>([]);
+export function ProductDetail({ product, related }: Props) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState<ApiVariant | null>(
-    null
+    product?.variants[0] ?? null,
   );
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
 
-  // MOCK: match API collection name → mock slug for back-link styling
-  const collection: ShowcaseCollection | undefined = product?.collection
-    ? COLLECTIONS_BY_NAME.get(product.collection)
-    : undefined;
-
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      try {
-        // API: GET /api/products/:id
-        const res = await fetch(`/api/products/${productId}`);
-        const data: ApiProductResponse = await res.json();
-        if (!data.success) {
-          setNotFound(true);
-          return;
-        }
-        setProduct(data.data);
-        if (data.data.variants.length > 0) {
-          setSelectedVariant(data.data.variants[0]);
-        }
-
-        if (data.data.collection) {
-          const relatedParams = new URLSearchParams({
-            collection: data.data.collection,
-            limit: "5",
-          });
-          const relatedRes = await fetch(
-            `/api/products?${relatedParams.toString()}`
-          );
-          const relatedData: ApiProductsResponse = await relatedRes.json();
-          if (relatedData.success) {
-            setRelated(
-              relatedData.data.products.filter((p) => p.id !== productId)
-            );
-          }
-        }
-      } catch (error) {
-        console.error("Failed to fetch product:", error);
-        setNotFound(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, [productId]);
-
-  if (loading) {
-    return (
-      <div className="mx-auto max-w-7xl animate-pulse px-6 py-16 lg:px-10">
-        <div className="grid gap-12 lg:grid-cols-2">
-          <div className="aspect-square bg-neutral-50" />
-          <div className="space-y-4">
-            <div className="h-8 w-2/3 bg-neutral-100" />
-            <div className="h-20 bg-neutral-50" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (notFound || !product) {
+  if (!product) {
     return (
       <div className="py-20 text-center">
         <p className="text-sm text-neutral-400">Product not found</p>
@@ -109,6 +41,11 @@ export function ProductDetail({ productId }: Props) {
       </div>
     );
   }
+
+  // MOCK: match API collection name → mock slug for back-link styling
+  const collection = product.collection
+    ? COLLECTIONS_BY_NAME.get(product.collection)
+    : undefined;
 
   const images = [...product.images].sort((a, b) => a.sortOrder - b.sortOrder);
   const theme = collection ? getCollectionTheme(collection.slug) : null;
@@ -128,11 +65,7 @@ export function ProductDetail({ productId }: Props) {
     >
       <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
         <Link
-          href={
-            collection
-              ? `/collections/${collection.slug}`
-              : "/pieces"
-          }
+          href={collection ? `/collections/${collection.slug}` : "/pieces"}
           className="text-link text-xs"
           style={theme ? { color: theme.accent } : undefined}
         >
@@ -161,7 +94,7 @@ export function ProductDetail({ productId }: Props) {
                 {product.collection}
               </Link>
             ) : (
-              (product.collection ?? "Dino studio")
+              (product.collection ?? "Dino Studio")
             )}
           </p>
           <h1 className="heading-display mt-3 text-4xl md:text-5xl">
@@ -187,8 +120,6 @@ export function ProductDetail({ productId }: Props) {
             {selectedVariant?.size && (
               <DetailRow label="Size" value={selectedVariant.size} />
             )}
-            {/* MOCK: no weight field on Product/Variant model */}
-            {/* MOCK: no packaging field on Product model */}
             {selectedVariant && (
               <DetailRow
                 label="Price"
@@ -204,9 +135,7 @@ export function ProductDetail({ productId }: Props) {
 
           {product.variants.length > 1 && (
             <div className="mt-8">
-              <h3 className="form-label">
-                Variants
-              </h3>
+              <h3 className="form-label">Variants</h3>
               <div className="mt-4 space-y-2">
                 {product.variants.map((variant) => (
                   <button
@@ -249,8 +178,8 @@ export function ProductDetail({ productId }: Props) {
             <Link
               href={
                 selectedVariant
-                  ? `/inquiry?product=${productId}&variant=${selectedVariant.id}`
-                  : `/inquiry?product=${productId}`
+                  ? `/inquiry?product=${product.id}&variant=${selectedVariant.id}`
+                  : `/inquiry?product=${product.id}`
               }
               className="btn-catalogue btn-catalogue-solid inline-block px-8 py-4 text-center"
             >

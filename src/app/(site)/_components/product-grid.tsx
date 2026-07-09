@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { ApiProduct, ApiProductsResponse } from "@/lib/types/product";
+import type { ApiProduct } from "@/lib/types/product";
 import { collectionNameFromSlug, toProductCard } from "@/lib/catalogue-adapter";
 import { getCollection } from "@/lib/mock-catalogue-data";
 import { getCollectionTheme } from "@/lib/collection-theme";
@@ -17,6 +17,7 @@ import {
   ProductCard,
   ProductCardSkeleton,
 } from "./product-card";
+import { fetchProducts, productsFromResponse } from "./site-products";
 
 const PAGE_SIZE = 24;
 
@@ -49,7 +50,7 @@ export function ProductGrid() {
   });
   const [page, setPage] = useState(1);
 
-  const fetchProducts = useCallback(async () => {
+  const loadProducts = useCallback(async () => {
     const isLoadMore = page > 1;
     if (isLoadMore) {
       setLoadingMore(true);
@@ -57,26 +58,23 @@ export function ProductGrid() {
       setLoading(true);
     }
 
-    const params = new URLSearchParams();
-    if (filters.category) params.set("category", filters.category);
-    if (filters.material) params.set("material", filters.material);
-    if (filters.search) params.set("search", filters.search);
-    if (filters.sort) params.set("sort", filters.sort);
-    if (collectionName) params.set("collection", collectionName);
-    params.set("page", String(page));
-    params.set("limit", String(PAGE_SIZE));
-
     try {
-      const res = await fetch(`/api/products?${params.toString()}`);
-      const data: ApiProductsResponse = await res.json();
-      if (data.success) {
+      const data = await fetchProducts({
+        category: filters.category || undefined,
+        material: filters.material || undefined,
+        search: filters.search || undefined,
+        sort: filters.sort || undefined,
+        collection: collectionName || undefined,
+        page,
+        limit: PAGE_SIZE,
+      });
+      const list = productsFromResponse(data);
+      if (list) {
         setProducts((prev) =>
-          isLoadMore
-            ? [...prev, ...data.data.products]
-            : data.data.products
+          isLoadMore ? [...prev, ...list.products] : list.products,
         );
-        setTotal(data.data.pagination.total);
-        setTotalPages(data.data.pagination.totalPages);
+        setTotal(list.total);
+        setTotalPages(list.totalPages);
       }
     } catch (error) {
       console.error("Failed to fetch products:", error);
@@ -108,8 +106,8 @@ export function ProductGrid() {
   }, [collectionSlug]);
 
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    loadProducts();
+  }, [loadProducts]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -237,13 +235,12 @@ export function CollectionPreview({
     const load = async () => {
       setLoading(true);
       try {
-        const params = new URLSearchParams({
+        const data = await fetchProducts({
           collection: collectionName,
-          limit: String(limit),
+          limit,
         });
-        const res = await fetch(`/api/products?${params.toString()}`);
-        const data: ApiProductsResponse = await res.json();
-        if (data.success) setProducts(data.data.products);
+        const list = productsFromResponse(data);
+        if (list) setProducts(list.products);
       } catch (error) {
         console.error("Failed to fetch collection preview:", error);
       } finally {

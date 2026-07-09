@@ -3,11 +3,19 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Brand accent — sterling silver gray (grill: A); not demo gold #db9662 */
+  --brand-accent: #8a8f96;
+  --brand-accent-muted: rgba(138, 143, 150, 0.12);
+  --brand-ink-muted: rgba(23, 23, 23, 0.65);
+  /* Hero left panel — solid paper (match navbar; no alpha or photo shows through) */
+  --hero-panel: #faf9f7;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-accent-muted: var(--brand-accent-muted);
   --font-sans: "Helvetica Neue", var(--font-body), Helvetica, Arial, sans-serif;
 }
 
@@ -19,6 +27,28 @@ body {
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+}
+
+/* Demo-style hero: full-viewport fixed bg; left column paints over left half */
+.home-hero-fixed {
+  background-color: var(--hero-panel);
+  background-position: center right;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+@media (max-width: 1023px) {
+  .home-hero-fixed {
+    background-attachment: scroll;
+    background-position: center center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-fixed {
+    background-attachment: scroll;
   }
 }
 
@@ -131,6 +161,16 @@ body {
 
   .text-link {
     @apply text-sm tracking-wide text-neutral-500 underline underline-offset-4 transition-colors hover:text-neutral-900;
+  }
+
+  /* Section CTA — editorial underline (grill: hero keeps btn-catalogue; sections use this) */
+  .text-link-editorial {
+    @apply inline-block border-b border-current pb-0.5 text-sm font-light tracking-wide text-neutral-900/70 transition-colors hover:text-neutral-900;
+    font-family: var(--font-display), ui-serif, Georgia, "Times New Roman", serif;
+  }
+
+  .section-hairline {
+    @apply mx-auto h-px w-12 bg-[var(--brand-accent)];
   }
 
   .form-label {

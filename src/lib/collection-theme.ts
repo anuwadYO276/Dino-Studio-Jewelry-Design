@@ -30,8 +30,6 @@ export interface TypeAccent {
   letterSpacing?: string;
 }
 
-export type HomeCtaStyle = "link" | "minimal";
-
 /** Theme without the derived `accentMuted` — computed in getCollectionTheme */
 type CollectionThemeConfig = Omit<CollectionTheme, "accentMuted">;
 
@@ -45,9 +43,6 @@ export interface CollectionTheme {
   moodCopy: string;
   motif: CollectionMotif;
   typeAccent: TypeAccent;
-  /** Home editorial block — optional per collection */
-  homeCta?: string;
-  homeCtaStyle?: HomeCtaStyle;
 }
 
 const THEMES: Record<string, CollectionThemeConfig> = {
@@ -61,8 +56,6 @@ const THEMES: Record<string, CollectionThemeConfig> = {
       "Sterling silver shaped like wind-lifted petals — anemone, wild rose, and meadow bloom cast in quiet lines. Hand-finished with sandblasted shimmer; each piece holds a story too soft to speak aloud.",
     motif: "petal",
     typeAccent: { weight: 300, italic: true },
-    homeCta: "Botanical Whispers →",
-    homeCtaStyle: "link",
   },
   "fallen-petals": {
     accent: "#9a6b65",
@@ -74,8 +67,6 @@ const THEMES: Record<string, CollectionThemeConfig> = {
       "Beauty caught at the moment of falling. Romantic, fragile forms preserved in sterling — wearable memento of what fades.",
     motif: "petal",
     typeAccent: { weight: 300, italic: true },
-    homeCta: "Fallen Petals →",
-    homeCtaStyle: "link",
   },
   "wild-bloom": {
     accent: "#6b5a45",
@@ -87,8 +78,6 @@ const THEMES: Record<string, CollectionThemeConfig> = {
       "Untamed lines drawn from nature's raw expression. No symmetry forced — only the honesty of organic growth cast in metal.",
     motif: "bloom",
     typeAccent: { weight: 300, letterSpacing: "0.04em" },
-    homeCta: "Explore →",
-    homeCtaStyle: "minimal",
   },
   "primitive-gold": {
     accent: "#a88850",

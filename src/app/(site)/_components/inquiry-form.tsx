@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { getCollection } from "@/lib/mock-catalogue-data";
+import { fetchProduct } from "./site-products";
 
 export function InquiryForm() {
   const searchParams = useSearchParams();
@@ -23,12 +24,15 @@ export function InquiryForm() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  // Prefill message from product or collection query params (don't overwrite if set)
   useEffect(() => {
-    if (!productId) return;
-    fetch(`/api/products/${productId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
+    let cancelled = false;
+
+    const prefill = async () => {
+      if (productId) {
+        try {
+          const data = await fetchProduct(productId);
+          if (cancelled || !data.success) return;
           setProductName(data.data.name);
           setForm((f) =>
             f.message
@@ -36,25 +40,31 @@ export function InquiryForm() {
               : {
                   ...f,
                   message: `I would like a wholesale quote for ${data.data.name}.`,
-                }
+                },
           );
+        } catch {
+          /* ignore prefill errors */
         }
-      })
-      .catch(() => {});
-  }, [productId]);
+        return;
+      }
 
-  useEffect(() => {
-    if (!collectionSlug || productId) return;
-    const meta = getCollection(collectionSlug);
-    if (!meta) return;
-    setForm((f) =>
-      f.message
-        ? f
-        : {
-            ...f,
-            message: `I would like a wholesale quote for pieces from the ${meta.name} collection.`,
-          }
-    );
+      if (!collectionSlug) return;
+      const meta = getCollection(collectionSlug);
+      if (!meta) return;
+      setForm((f) =>
+        f.message
+          ? f
+          : {
+              ...f,
+              message: `I would like a wholesale quote for pieces from the ${meta.name} collection.`,
+            },
+      );
+    };
+
+    prefill();
+    return () => {
+      cancelled = true;
+    };
   }, [collectionSlug, productId]);
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -1,20 +1,32 @@
-import Image from "next/image";
 import Link from "next/link";
-import { HomeFeaturedPieces } from "./_components/home-featured-pieces";
-import { HomeCoverTrilogy } from "./_components/home-sections";
+import {
+  HomeArrivalsSection,
+  HomeCategorySection,
+  HomeCollectionTiles,
+  HomeFeaturedSection,
+  HomeMetalsSection,
+  HomeStorySection,
+  HomeTestimonialsSection,
+} from "./_components/home-blocks";
+import { loadNewestProducts } from "./_lib/load-site-products";
 import {
   BRAND,
   HOME_COVER_SLUGS,
   getCollection,
 } from "@/lib/mock-catalogue-data";
-import { getCollectionTheme } from "@/lib/collection-theme";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const cover = getCollection(HOME_COVER_SLUGS[0]);
   const coverCollections = HOME_COVER_SLUGS.map(getCollection).filter(
     (c): c is NonNullable<typeof c> => c != null,
   );
-  const cover = coverCollections[0];
-  const coverTheme = getCollectionTheme(cover.slug);
+
+  // ponytail: one window, then slice — same as old client offset hack
+  const newest = await loadNewestProducts(0, 5);
+  const arrivals = newest.slice(0, 3);
+  const featuredSlice = newest.slice(3, 5);
+  const featured =
+    featuredSlice.length > 0 ? featuredSlice : newest.slice(0, 2);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -32,79 +44,49 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <section className="relative -mt-16 flex min-h-[100svh] items-end pt-16">
-        <Image
-          src={cover.heroImage}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: coverTheme.heroGradient }}
-        />
-        <div
-          className="absolute bottom-0 left-0 h-px w-full"
-          style={{ backgroundColor: coverTheme.accent }}
-        />
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-20 lg:px-10 lg:pb-24">
-          <h1 className="heading-display mt-4 text-5xl text-white md:text-7xl lg:text-8xl">
-            Dino Studio
-          </h1>
-          <p className="mt-5 max-w-lg font-display text-xl font-light italic leading-relaxed text-white/90 md:text-2xl">
-            {BRAND.homeHeroLine}
-          </p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <Link
-              href="/pieces"
-              className="btn-catalogue border-white bg-white text-neutral-900 transition-opacity hover:opacity-90"
-            >
-              Browse catalogue
-            </Link>
-            <Link
-              href="/inquiry"
-              className="btn-catalogue border-white/90 text-white transition-colors hover:bg-white hover:text-neutral-900"
-            >
-              Trade inquiry
-            </Link>
+      {/*
+        True 50/50 like demo: left column full-height paper; right empty so
+        section background-attachment:fixed shows through.
+      */}
+      <section
+        className="home-hero-fixed relative -mt-16 min-h-[100svh]"
+        style={{ backgroundImage: cover ? `url(${cover.heroImage})` : undefined }}
+        aria-label={BRAND.name}
+      >
+        <div className="relative z-10 grid min-h-[100svh] grid-cols-1 lg:grid-cols-2">
+          <div className="flex min-h-[100svh] flex-col items-end justify-center bg-[var(--hero-panel)] px-10 pt-16 pb-20 sm:px-14 lg:pl-20 lg:pr-10 xl:pl-28 xl:pr-12">
+            <div className="w-full max-w-[22rem] text-left sm:max-w-md lg:max-w-[26rem]">
+              <h1 className="font-display text-[2.75rem] font-semibold leading-[1.15] tracking-normal text-neutral-900 sm:text-5xl md:text-6xl lg:text-[4.25rem]">
+                {BRAND.name}
+              </h1>
+              <p className="mt-4 font-display text-lg font-normal italic leading-snug text-neutral-800 sm:text-xl md:text-2xl">
+                {BRAND.homeHeroLine}
+              </p>
+              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
+                <Link
+                  href="/pieces"
+                  className="inline-block border border-neutral-900 px-6 py-3 text-[11px] tracking-[0.14em] uppercase text-neutral-900 transition-colors hover:bg-neutral-900 hover:text-white"
+                >
+                  - Browse catalogue
+                </Link>
+                <Link href="/inquiry" className="text-link-editorial">
+                  - Trade inquiry
+                </Link>
+              </div>
+            </div>
           </div>
+          {/* Right half: no fill — fixed background image shows here */}
+          <div className="hidden min-h-[100svh] lg:block" aria-hidden />
         </div>
       </section>
 
-      <section className="reveal-on-scroll border-t border-neutral-100">
-        <div className="mx-auto grid max-w-7xl gap-16 px-6 py-24 lg:grid-cols-2 lg:items-center lg:gap-20 lg:px-10 lg:py-28">
-          <div className="relative aspect-[4/5] overflow-hidden">
-            <Image
-              src={BRAND.storyImage}
-              alt="Ocean tide — inspiration for Dino Studio silver jewelry"
-              fill
-              sizes="(max-width:1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-          </div>
-          <div>
-            <h2 className="heading-display text-3xl md:text-4xl">
-              Shaped by tide, time, and nature
-            </h2>
-            <p className="mt-8 text-sm leading-relaxed text-neutral-600">
-              {BRAND.story}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <HomeCoverTrilogy collections={coverCollections} />
-
-      <section className="border-t border-neutral-100">
-        <HomeFeaturedPieces />
-        <div className="py-12 text-center">
-          <Link href="/pieces" className="text-link">
-            View full catalogue →
-          </Link>
-        </div>
-      </section>
+      <HomeCategorySection />
+      <HomeStorySection />
+      <HomeArrivalsSection products={arrivals} />
+      <HomeTestimonialsSection />
+      <HomeCollectionTiles collections={coverCollections} />
+      <HomeFeaturedSection products={featured} />
+      <HomeMetalsSection />
     </>
   );
 }
