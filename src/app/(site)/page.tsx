@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   HomeArrivalsSection,
@@ -49,12 +50,24 @@ export default async function HomePage() {
         section background-attachment:fixed shows through.
       */}
       <section
-        className="home-hero-fixed relative -mt-16 min-h-[100svh]"
+        className="home-hero-fixed relative min-h-0 lg:-mt-16 lg:min-h-[100svh]"
         style={{ backgroundImage: cover ? `url(${cover.heroImage})` : undefined }}
         aria-label={BRAND.name}
       >
-        <div className="relative z-10 grid min-h-[100svh] grid-cols-1 lg:grid-cols-2">
-          <div className="flex min-h-[100svh] flex-col items-end justify-center bg-[var(--hero-panel)] px-10 pt-16 pb-20 sm:px-14 lg:pl-20 lg:pr-10 xl:pl-28 xl:pr-12">
+        {cover && (
+          <div className="relative aspect-[4/5] min-h-[45svh] w-full lg:hidden">
+            <Image
+              src={cover.heroImage}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+          </div>
+        )}
+        <div className="relative z-10 grid min-h-0 grid-cols-1 lg:min-h-[100svh] lg:grid-cols-2">
+          <div className="flex flex-col bg-[var(--hero-panel)] px-6 py-12 sm:px-10 lg:min-h-[100svh] lg:flex-col lg:items-end lg:justify-center lg:px-10 lg:pt-16 lg:pb-20 lg:pl-20 lg:pr-10 xl:pl-28 xl:pr-12">
             <div className="w-full max-w-[22rem] text-left sm:max-w-md lg:max-w-[26rem]">
               <h1 className="font-display text-[2.75rem] font-semibold leading-[1.15] tracking-normal text-neutral-900 sm:text-5xl md:text-6xl lg:text-[4.25rem]">
                 {BRAND.name}
